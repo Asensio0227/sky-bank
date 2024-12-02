@@ -6,11 +6,13 @@ import { Colors } from '../../constants/Colors';
 import ErrorMessage from './ErrorMessage';
 
 const FormField: React.FC<{
-  names: string;
-  label: string;
-  placeholder: string;
-  width: string;
-}> = ({ names, label, placeholder, width, ...otherProps }) => {
+  names?: string | any;
+  label?: string;
+  placeholder?: string | any;
+  width?: string | any;
+  name?: string | any;
+  [key: string]: any;
+}> = ({ name, names, label, placeholder, width, ...otherProps }) => {
   const { setFieldTouched, setFieldValue, values, touched, errors } =
     useFormikContext();
   return (
@@ -18,6 +20,7 @@ const FormField: React.FC<{
       {label && <Text style={styles.label}>{label} : </Text>}
       <View style={[styles.containerCenter, styles.container]}>
         <MaterialCommunityIcons
+          name={name}
           size={20}
           color={Colors.colors.Primary}
           {...otherProps}

@@ -9,14 +9,15 @@ import Animated from 'react-native-reanimated';
 import { useDispatch, useSelector } from 'react-redux';
 import { palette } from '../../constants/Colors';
 import { logout } from '../../features/auth/authSlice';
+import { RootState } from '../../features/auth/types';
 
 const CustomDrawer: React.FC = (props) => {
   const route = useNavigation();
-  const { user, isLoading } = useSelector((store) => store.auth);
+  const { user, isLoading } = useSelector((store: RootState) => store.auth);
   const dispatch = useDispatch();
 
   async function logoutUser() {
-    await dispatch(logout());
+    await dispatch(logout() as any);
     route.navigate('login');
   }
 
@@ -81,7 +82,7 @@ const CustomDrawer: React.FC = (props) => {
           {/* Do more */}
           <Pressable
             onPress={() => {
-              // route.navigate('Profile');
+              route.navigate('Profile');
             }}
           >
             <Text style={{ color: '#dddddd', paddingVertical: 5 }}>

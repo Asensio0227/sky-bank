@@ -20,7 +20,7 @@ const PwReset = () => {
 
   const onRequestReset = async (data: userType) => {
     try {
-      await dispatch(forgotPassword(data));
+      await dispatch(forgotPassword(data) as any);
       setSuccessfulCreation(true);
     } catch (error: any) {
       console.log(error.msg);
@@ -30,7 +30,7 @@ const PwReset = () => {
   // Reset the password with the code and the new password
   const onReset = async (data: userType) => {
     try {
-      await dispatch(resetPassword(data));
+      await dispatch(resetPassword(data) as any);
       setSuccessfulCreation(false);
       navigation.navigate('login');
     } catch (error: any) {

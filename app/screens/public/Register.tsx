@@ -15,6 +15,7 @@ import { RootState } from '../../features/auth/types';
 const validateSchema = Yup.object().shape({
   firstName: Yup.string().required('Please enter your name'),
   lastName: Yup.string().required('Please enter your surname'),
+  gender: Yup.string().required('Please enter your gender'),
   email: Yup.string().email().required('Please enter your email'),
   ideaNumber: Yup.string().required('Please enter your iD Number'),
   physicalAddress: Yup.string().required('Please enter your physical address'),
@@ -36,7 +37,7 @@ const Register = () => {
   const dispatch = useDispatch();
 
   const onSubmit = async (props: userType) => {
-    await dispatch(createUserAccount(props));
+    await dispatch(createUserAccount(props) as any);
     navigation.navigate('verify');
   };
 
@@ -57,6 +58,7 @@ const Register = () => {
             password: '',
             phoneNumber: '',
             dob: '',
+            gender: '',
           }}
           validationSchema={validateSchema}
           onSubmit={onSubmit}
@@ -78,6 +80,11 @@ const Register = () => {
             name='dob'
             placeholder='Your date of birth'
             autoCapitalize='none'
+          />
+          <FormField
+            name='human-female-boy'
+            names='gender'
+            placeholder='Gender'
           />
           <PhoneNumberInput name='phoneNumber' />
           <FormField

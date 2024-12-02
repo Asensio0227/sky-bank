@@ -9,14 +9,18 @@ export type userType = {
   userId?: string;
   firstName?: string;
   lastName?: string;
+  gender?: string;
   email?: string;
   avatar?: string;
   roles?: string;
-  token?: string;
+  token?: string | any;
   ideaNumber?: string;
   physicalAddress?: string;
   banned?: boolean;
+  phoneNumber?: string | number;
   password?: string;
+  oldPassword?: string;
+  newPassword?: string;
   isVerified?: boolean;
   verificationToken?: number | string | null;
   dob?: string;
@@ -27,8 +31,8 @@ export type userType = {
 };
 
 const Form: React.FC<{
-  initialValues: userType;
-  onSubmit: (props: userType) => Promise<void>;
+  initialValues: any;
+  onSubmit: any;
   validationSchema: any;
   children: React.ReactNode;
   style?: any;

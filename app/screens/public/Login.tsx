@@ -19,8 +19,8 @@ const Login = () => {
   const { isLoading } = useSelector((store: RootState) => store.auth);
   const dispatch = useDispatch();
 
-  const onSignInPress = async (data: userType) => {
-    await dispatch(loginUser(data));
+  const onSignInPress = async (data: userType | any) => {
+    await dispatch(loginUser(data) as any);
   };
 
   if (isLoading) return <Loading />;

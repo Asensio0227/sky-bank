@@ -17,7 +17,7 @@ const VerifyEmail = () => {
   const dispatch = useDispatch();
 
   const handleChange = async (data: userType) => {
-    await dispatch(verifyUserAccount(data));
+    await dispatch(verifyUserAccount(data) as any);
     navigation.navigate('login');
   };
 

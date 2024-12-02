@@ -2,11 +2,16 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { useFormikContext } from 'formik';
 import React, { useState } from 'react';
 import { Platform, Pressable } from 'react-native';
+import { palette } from '../../constants/Colors';
+import defaultStyle from '../../constants/defaultStyle';
 import { formatDate } from '../../utils/format';
 import AppTextInput from '../custom/TextInput';
 import ErrorMessage from './ErrorMessage';
 
-const DatePicker: React.FC<{ name: string }> = ({ name, ...otherProps }) => {
+const DatePicker: React.FC<{ name: string; [key: string]: any }> = ({
+  name,
+  ...otherProps
+}) => {
   const { setFieldValue, setFieldTouched, values, errors, touched } =
     useFormikContext();
   const [show, setShow] = useState(false);
@@ -40,6 +45,7 @@ const DatePicker: React.FC<{ name: string }> = ({ name, ...otherProps }) => {
             onChange={onChange}
             minimumDate={new Date('1900-01-01')}
             {...otherProps}
+            style={{ backgroundColor: palette.gray }}
           />
         </>
       )}
@@ -47,10 +53,11 @@ const DatePicker: React.FC<{ name: string }> = ({ name, ...otherProps }) => {
         <Pressable onPress={toggleDatePicker}>
           <AppTextInput
             onBlur={() => setFieldTouched(name)}
-            onChangeText={(text) => setFieldValue(name, text)}
+            onChangeText={(text: string) => setFieldValue(name, text)}
             value={values[name]}
             {...otherProps}
             editable={false}
+            style={defaultStyle.input}
           />
           <ErrorMessage error={errors[name]} visible={touched[name]} />
         </Pressable>

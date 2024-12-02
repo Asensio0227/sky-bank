@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
 
 import React from 'react';
+import ModalScreen from '../components/ModalScreen';
 import Add from '../screens/account/Add';
 import Details from '../screens/account/Details';
 import Management from '../screens/account/Management';
@@ -26,6 +27,9 @@ const AccountNavigation = () => {
       <Stack.Screen name='transfer' component={Transfer} />
       <Stack.Screen name='refund' component={Refund} />
       <Stack.Screen name='details' component={Details} />
+      <Stack.Group screenOptions={{ presentation: 'modal' }}>
+        <Stack.Screen name='modal' component={ModalScreen} />
+      </Stack.Group>
     </Stack.Navigator>
   );
 };

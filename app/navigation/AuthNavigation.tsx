@@ -5,6 +5,10 @@ import Register from '../screens/public/Register';
 import Reset from '../screens/public/Reset';
 import VerifyEmail from '../screens/public/VerifyEmail';
 
+// type HomeScreenProps = {
+//   navigation: NativeStackNavigationProp;
+// };
+
 const Stack = createNativeStackNavigator();
 const AuthNavigation = () => {
   return (

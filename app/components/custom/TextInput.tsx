@@ -4,12 +4,12 @@ import { StyleSheet, TextInput, View } from 'react-native';
 import { Colors } from '../../constants/Colors';
 import defaultStyle from '../../constants/defaultStyle';
 
-const AppTextInput: React.FC<{ width: any; style: any; icon: any }> = ({
-  width = '100%',
-  style,
-  icon,
-  ...otherProps
-}) => {
+const AppTextInput: React.FC<{
+  width: any;
+  style: any;
+  icon: any;
+  [key: string]: any;
+}> = ({ width = '100%', style, icon, ...otherProps }) => {
   return (
     <View style={[styles.container, { width }, style]}>
       {icon && (

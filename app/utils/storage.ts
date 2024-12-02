@@ -1,9 +1,13 @@
-import { userType } from '@/api/user';
 import * as SecureStore from 'expo-secure-store';
+import { userType } from '../components/form/Form';
 
 const key = 'authToken';
 
-const storeToken = async (token: userType) => {
+interface userWithoutPassword extends userType {
+  gender?: string;
+}
+
+const storeToken = async (token: userWithoutPassword) => {
   try {
     const userInfoString = JSON.stringify(token);
     await SecureStore.setItemAsync(key, userInfoString);

@@ -1,14 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-const Allusers = () => {
+const PageBtnContainer = () => {
   return (
     <View>
-      <Text>Allusers</Text>
+      <Text>PageBtnContainer</Text>
     </View>
   );
 };
 
-export default Allusers;
+export default PageBtnContainer;
 
 const styles = StyleSheet.create({});

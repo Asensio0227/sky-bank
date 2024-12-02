@@ -1,5 +1,7 @@
 // import { Linking } from 'react-native';
 
+import { userType } from '../components/form/Form';
+
 // const makeCall = (phoneNumber) => {
 //   let formattedNumber = '';
 //   if (Platform.OS === 'android') {
@@ -21,3 +23,29 @@ export function formatDate(rawDate: Date) {
 
   return `${day}-${month}-${year}`;
 }
+export interface FormType extends userType {
+  firstName: string;
+  lastName: string;
+  email: string;
+  avatar: string | undefined;
+  dob: string;
+  phoneNumber: string;
+}
+
+export const formData = (user: FormType) => {
+  const formData = new FormData();
+  formData.append('firstName', user.firstName);
+  formData.append('lastName', user.lastName);
+  formData.append('email', user.email);
+  if (user.avatar) {
+    formData.append('avatar', user.avatar);
+  }
+  formData.append('dob', user.dob);
+  formData.append('phoneNumber', user.phoneNumber);
+  let userObject = {};
+
+  formData.forEach((part) => {
+    userObject[part[0]] = part[1];
+  });
+  return userObject;
+};

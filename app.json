@@ -29,6 +29,7 @@
         "projectId": "bea98837-efb9-48d5-9101-89716e6af3eb"
       }
     },
-    "owner": "brendon99"
+    "owner": "brendon99",
+    "plugins": ["expo-router"]
   }
 }

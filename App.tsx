@@ -20,9 +20,9 @@ function Layout() {
         console.log(user, isLoading);
         console.log(`===user===`);
         console.log('==current user==');
-        await dispatch(loadUser());
+        await dispatch(loadUser() as any);
         // if(user?.roles === 'admin'){
-        //   navigation.navigate('adminHome')
+        //   navigation.navigate('dashboard')
         // } else {
         //   navigation.navigate('home')
         // }
