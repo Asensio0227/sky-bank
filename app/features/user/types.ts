@@ -33,8 +33,9 @@ export interface UserState extends FilterState {
   users: userType[];
   singleUser: userType;
   totalUsers: number;
-  numOfPages: number;
+  numOfPages: number | any;
   page: number;
+  numbOfPages?: number;
 }
 
 export interface payProp {
@@ -67,5 +68,5 @@ export interface RejectedActionPayload {
 }
 
 export interface RootUserState {
-  AllUserState: UserState | null | any;
+  allUser: UserState | null | any;
 }

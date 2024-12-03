@@ -4,6 +4,7 @@ const Stack = createNativeStackNavigator();
 
 import React from 'react';
 import AdminHome from '../screens/Admin/AdminHome';
+import AllAccounts from '../screens/Admin/AllAccounts';
 import AllUsers from '../screens/Admin/AllUsers';
 import CreateAccount from '../screens/Admin/CreateAccount';
 import SingleUser from '../screens/Admin/SingleUser';
@@ -26,6 +27,11 @@ const AdminNavigation = () => {
         name='all'
         options={{ title: 'All users' }}
         component={AllUsers}
+      />
+      <Stack.Screen
+        name='allAccounts'
+        options={{ title: 'All accounts' }}
+        component={AllAccounts}
       />
       <Stack.Screen
         name='loans'

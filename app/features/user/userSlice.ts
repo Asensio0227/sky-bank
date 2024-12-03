@@ -1,10 +1,6 @@
-import {
-  createAsyncThunk,
-  createSlice,
-  PayloadAction,
-  ThunkAPI,
-} from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ToastAndroid } from 'react-native';
+import { ThunkAPI } from 'redux-thunk';
 import customFetch, { checkForUnauthorizedResponse } from '../../utils/axios';
 import { userType } from './../../components/form/Form';
 import { FilterState, Roles, SortOptions, UserState } from './types';
@@ -29,18 +25,20 @@ const initialState: UserState = {
   ...initialFilterState,
 };
 
-export const getAllUsers = createAsyncThunk<UserState>(
+export const getAllUsers = createAsyncThunk(
   'users/getall',
   async (_, thunkAPI: ThunkAPI) => {
-    const { page, search, sort, roles, banned } = thunkAPI.getState().users;
-    console.log(`===page[[]]`);
-    console.log(page);
-    console.log(`===page[[]]`);
+    const { page, search, sort, roles, banned } = thunkAPI.getState().allUser;
+    const params = new URLSearchParams({
+      roles,
+      banned,
+      sort,
+      page: String(page),
+      ...(search && { search }),
+    });
 
-    let url = `user?&roles=${roles}&banned=${banned}&sort=${sort}&page=${page}`;
-    if (search) {
-      url = url + `&search=${search}`;
-    }
+    const url = `user?${params.toString()}`;
+
     try {
       const response = await customFetch.get(url);
       return response.data;
@@ -102,7 +100,7 @@ export const deleteUser = createAsyncThunk(
 );
 
 const userSlice = createSlice({
-  name: 'AllUserState',
+  name: 'allUser',
   initialState,
   reducers: {
     showLoading: (state: UserState) => {
@@ -110,6 +108,13 @@ const userSlice = createSlice({
     },
     hideLoading: (state: UserState) => {
       state.isLoading = false;
+    },
+    handleChange: (state, { payload: { name, value } }) => {
+      state.page = 1;
+      state[name] = value;
+    },
+    handlePage: (state, { payload }) => {
+      state.page = payload;
     },
     clearFilters: (state: UserState) => {
       return { ...state, ...initialFilterState };
@@ -127,7 +132,7 @@ const userSlice = createSlice({
         (state, action: PayloadAction<UserState>) => {
           state.isLoading = false;
           state.users = action.payload.users;
-          state.numOfPages = action.payload.numOfPages;
+          state.numOfPages = action.payload.numbOfPages;
           state.totalUsers = action.payload.totalUsers;
         }
       )
@@ -198,6 +203,12 @@ const userSlice = createSlice({
   },
 });
 
-export const { showLoading, hideLoading, clearFilters, clearAllUserState } =
-  userSlice.actions;
+export const {
+  showLoading,
+  hideLoading,
+  handleChange,
+  handlePage,
+  clearFilters,
+  clearAllUserState,
+} = userSlice.actions;
 export default userSlice.reducer;

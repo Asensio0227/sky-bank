@@ -22,6 +22,11 @@ const adminServices = [
     icon: 'bank',
     path: 'create',
   },
+  {
+    name: 'All account',
+    icon: 'card-multiple-outline',
+    path: 'allAccounts',
+  },
 ];
 
 const AdminHome = () => {

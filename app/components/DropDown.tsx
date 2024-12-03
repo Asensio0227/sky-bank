@@ -35,9 +35,7 @@ function PickerDisplay(props: { text: string }) {
 }
 
 const DropDown = () => {
-  const { singleUser } = useSelector(
-    (store: RootUserState) => store.AllUserState
-  );
+  const { singleUser } = useSelector((store: RootUserState) => store.allUser);
   const dispatch = useDispatch();
   const { _id, roles } = singleUser;
   const [text, setText] = useState(roles);

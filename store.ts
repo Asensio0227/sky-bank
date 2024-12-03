@@ -6,7 +6,7 @@ import userSlice from './app/features/user/userSlice';
 export const store = configureStore({
   reducer: {
     auth: authSlice,
-    AllUserState: userSlice,
+    allUser: userSlice,
     accounts: accountsSlice,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),

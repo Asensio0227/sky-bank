@@ -5,10 +5,11 @@ import { Colors } from '../../constants/Colors';
 import defaultStyle from '../../constants/defaultStyle';
 
 const AppTextInput: React.FC<{
-  width: any;
-  style: any;
+  width?: any;
+  style?: any;
   icon: any;
   [key: string]: any;
+  onChangeText: (value: any) => void | any;
 }> = ({ width = '100%', style, icon, ...otherProps }) => {
   return (
     <View style={[styles.container, { width }, style]}>

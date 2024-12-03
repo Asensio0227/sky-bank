@@ -27,7 +27,7 @@ const SingleUser = () => {
   const { _id } = user;
   const dispatch = useDispatch();
   const { userLoading, singleUser } = useSelector(
-    (store: RootUserState) => store.AllUserState
+    (store: RootUserState) => store.allUser
   );
   const date = moment(singleUser.createdAt).format('MM Do, YYYY');
   const { roles, banned, firstName } = singleUser;

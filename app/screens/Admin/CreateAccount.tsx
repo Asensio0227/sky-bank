@@ -6,14 +6,26 @@ import * as Yup from 'yup';
 import Loading from '../../components/custom/Loading';
 import Form from '../../components/form/Form';
 import FormField from '../../components/form/FormField';
+import FormSelector from '../../components/form/FormSelector';
 import SubmitButton from '../../components/form/SubmitButton';
 import { createAccount } from '../../features/accounts/accountsSlice';
+
+export enum AccountType {
+  Savings = 'savings',
+  Checking = 'checking',
+  Loan = 'loan',
+  Business = 'business',
+}
+export enum CardType {
+  Debit = 'Debit',
+  Credit = 'Credit',
+}
 
 export interface BankType {
   BankName: string;
   branchCode: number;
   accountNumber: number;
-  cardType: string;
+  accountType: string;
   ideaNumber: string;
 }
 
@@ -29,14 +41,19 @@ const CreateAccount = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { isLoading } = useSelector((store) => store.accounts);
+  const items = [
+    { label: 'Savings', value: 'savings' },
+    { label: 'Checking', value: 'checking' },
+    { label: ' Loan', value: 'loan' },
+    { label: ' Business', value: 'business' },
+  ];
 
   const handleSubmit = async (data: BankType) => {
     try {
       await dispatch(createAccount(data) as any);
+      navigation.navigate('AdminHome');
     } catch (error: any) {
       console.log('Error while creating account', error);
-    } finally {
-      navigation.navigate('dashboard');
     }
   };
 
@@ -48,27 +65,20 @@ const CreateAccount = () => {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        overflow: 'scroll',
       }}
     >
-      <ScrollView
-        contentContainerStyle={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
+      <Form
+        initialValues={{
+          BankName: 'Sky Bank',
+          branchCode: 0,
+          accountNumber: 0,
+          accountType: '',
+          ideaNumber: '',
         }}
+        validationSchema={validateSchema}
+        onSubmit={handleSubmit}
       >
-        <Form
-          initialValues={{
-            BankName: 'Sky Bank',
-            branchCode: 0,
-            accountNumber: 0,
-            accountType: '',
-            ideaNumber: '',
-          }}
-          validationSchema={validateSchema}
-          onSubmit={handleSubmit}
-        >
+        <ScrollView>
           <FormField name='bank' names='bankName' placeholder='Bank Name' />
           <FormField
             name='barcode'
@@ -81,11 +91,10 @@ const CreateAccount = () => {
             names='ideaNumber'
             placeholder='ID Number'
           />
-          <FormField
-            name='card-multiple'
-            names='accountType'
-            placeholder='Account Type'
-            keyBoardType='email-address'
+          <FormSelector
+            name='accountType'
+            items={items}
+            placeholder='Account type'
           />
           <FormField
             name='format-list-numbered'
@@ -94,8 +103,8 @@ const CreateAccount = () => {
             keyBoardType='numeric'
           />
           <SubmitButton title='create account' />
-        </Form>
-      </ScrollView>
+        </ScrollView>
+      </Form>
     </View>
   );
 };

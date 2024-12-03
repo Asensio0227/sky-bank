@@ -33,7 +33,11 @@ const accountsSlice = createSlice({
       })
       .addCase(createAccount.fulfilled, (state, action) => {
         state.isLoading = false;
-        ToastAndroid.showWithGravity(action.payload.msg, 15000, 0);
+        ToastAndroid.showWithGravity(
+          action.payload.msg || 'Account created successfully.',
+          15000,
+          0
+        );
       })
       .addCase(createAccount.rejected, (state, action: any) => {
         state.isLoading = false;
