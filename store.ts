@@ -7,7 +7,7 @@ export const store = configureStore({
   reducer: {
     auth: authSlice,
     allUser: userSlice,
-    accounts: accountsSlice,
+    allAccounts: accountsSlice,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });

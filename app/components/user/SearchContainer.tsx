@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootUserState } from '../features/user/types';
-import { clearFilters, handleChange } from '../features/user/userSlice';
-import Button from './custom/Button';
-import AppTextInput from './custom/TextInput';
-import AppPicker from './Picker';
+import { RootUserState } from '../../features/user/types';
+import { clearFilters, handleChange } from '../../features/user/userSlice';
+import Button from '../custom/Button';
+import AppTextInput from '../custom/TextInput';
+import AppPicker from '../Picker';
 
 export interface Option {
   label: string;
@@ -41,6 +41,11 @@ const SearchContainer = () => {
     if (isLoading) return;
     dispatch(handleChange({ name: 'search', value: searchTerm }));
   }, [searchTerm]);
+
+  useEffect(() => {
+    if (isLoading) return;
+    dispatch(handleChange({ name: 'sort', value: selected }));
+  }, [selected]);
 
   const handleClearFilters = () => {
     dispatch(clearFilters());

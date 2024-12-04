@@ -1,8 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { wrapper } from '../constants/styles';
-import { userType } from './form/Form';
+import { wrapper } from '../../constants/styles';
+import { userType } from '../form/Form';
 
 const User: React.FC<{ user: userType }> = ({ user }) => {
   const { lastName, firstName, phoneNumber, dob, avatar } = user;
@@ -26,7 +26,7 @@ const User: React.FC<{ user: userType }> = ({ user }) => {
             source={
               avatar
                 ? { uri: avatar }
-                : require('../../assets/background/user-icon.png')
+                : require('../../../assets/background/user-icon.png')
             }
             resizeMode='cover'
             style={{ width: 100, height: 100, borderRadius: 50 }}

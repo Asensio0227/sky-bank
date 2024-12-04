@@ -1,46 +1,46 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { palette } from '../constants/Colors';
-import { wrapper } from '../constants/styles';
-import { RootUserState } from '../features/user/types';
-import { handlePage } from '../features/user/userSlice';
-import Icon from './Icon';
+import { palette } from '../../constants/Colors';
+
+import { handlePage } from '../../features/accounts/accountsSlice';
+import { RootAccountState } from '../../features/accounts/types';
+import Icon from '../Icon';
 
 const PageBtnContainer = () => {
-  const { numOfPages, page } = useSelector(
-    (store: RootUserState) => store.allUser
+  const { numbOfPages, page } = useSelector(
+    (store: RootAccountState) => store.allAccounts
   );
   const dispatch = useDispatch();
 
-  const pages = Array.from({ length: numOfPages }, (_, index) => {
+  const pages = Array.from({ length: numbOfPages }, (_, index) => {
     return index + 1;
   });
 
   const prevBtn = () => {
     let newPage = page - 1;
     if (newPage < 1) {
-      newPage = numOfPages;
+      newPage = numbOfPages;
     }
     dispatch(handlePage(newPage));
   };
 
   const nextBtn = () => {
     let newPage = page + 1;
-    if (newPage > numOfPages) {
+    if (newPage > numbOfPages) {
       newPage = 1;
     }
     dispatch(handlePage(newPage));
   };
 
   return (
-    <View style={[wrapper.row, { marginBottom: 20 }]}>
+    <View style={styles.container}>
       <Pressable style={[styles.btn, styles.prevBtn]} onPress={prevBtn}>
         <Icon name='chevron-double-left' />
         <Text>Prev</Text>
       </Pressable>
 
-      <View>
+      <View style={styles.btns}>
         {pages.map((pageNumber) => {
           return (
             <Pressable
@@ -71,6 +71,9 @@ const styles = StyleSheet.create({
     backgroundColor: palette.primary,
     shadowColor: palette.secondary,
   },
+  btns: {
+    flexDirection: 'row',
+  },
   btn: {
     backgroundColor: 'lightgrey',
     paddingHorizontal: 10,
@@ -78,6 +81,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginHorizontal: 5,
   },
+  container: { marginBottom: 20, height: 30, flexDirection: 'row' },
   nextBtn: {
     marginLeft: 10,
     justifyContent: 'flex-end',

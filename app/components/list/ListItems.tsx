@@ -12,12 +12,13 @@ import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import { palette } from '../../constants/Colors';
 
 const ListItems: React.FC<{
-  IconComponent: any;
-  renderLeftActions: any;
-  onPress: any;
-  title: string;
-  subTitle: string;
-  image: any;
+  IconComponent?: any;
+  renderLeftActions?: any;
+  renderRightActions?: any;
+  onPress?: any;
+  title?: string;
+  subTitle?: string;
+  image?: any;
 }> = ({
   IconComponent,
   renderLeftActions,
@@ -25,10 +26,14 @@ const ListItems: React.FC<{
   title,
   subTitle,
   image,
+  renderRightActions,
 }) => {
   return (
     <GestureHandlerRootView>
-      <Swipeable renderLeftActions={renderLeftActions}>
+      <Swipeable
+        renderRightActions={renderRightActions}
+        renderLeftActions={renderLeftActions}
+      >
         <TouchableHighlight underlayColor={palette.gray} onPress={onPress}>
           <View style={styles.container}>
             {IconComponent}

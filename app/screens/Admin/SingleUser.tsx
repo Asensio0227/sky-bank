@@ -8,10 +8,10 @@ import React, { useCallback } from 'react';
 import { Alert, Image, ScrollView, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import DropDown from '../../components/DropDown';
-import UserInfo from '../../components/UserInfo';
 import Button from '../../components/custom/Button';
 import Loading from '../../components/custom/Loading';
 import { userType } from '../../components/form/Form';
+import UserInfo from '../../components/user/UserInfo';
 import { styles, wrapper } from '../../constants/styles';
 import { RootUserState } from '../../features/user/types';
 import {

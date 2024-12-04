@@ -43,4 +43,6 @@ export const palette = {
   green: '#59a388',
   gray: '#cacaca',
   white: '#ffffff',
+  edit: '#6fa8dc',
+  trash: '#631c1c',
 };

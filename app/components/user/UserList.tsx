@@ -2,13 +2,14 @@ import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 import { FlatList, ScrollView, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { palette } from '../constants/Colors';
-import { styles } from '../constants/styles';
-import { RootUserState } from '../features/user/types';
-import { getAllUsers } from '../features/user/userSlice';
+
+import { palette } from '../../constants/Colors';
+import { styles } from '../../constants/styles';
+import { RootUserState } from '../../features/user/types';
+import { getAllUsers } from '../../features/user/userSlice';
+import Loading from '../custom/Loading';
 import PageBtnContainer from './PageBtnContainer';
 import User from './User';
-import Loading from './custom/Loading';
 
 const UserList = () => {
   const {

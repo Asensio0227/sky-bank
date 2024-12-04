@@ -9,17 +9,7 @@ import FormField from '../../components/form/FormField';
 import FormSelector from '../../components/form/FormSelector';
 import SubmitButton from '../../components/form/SubmitButton';
 import { createAccount } from '../../features/accounts/accountsSlice';
-
-export enum AccountType {
-  Savings = 'savings',
-  Checking = 'checking',
-  Loan = 'loan',
-  Business = 'business',
-}
-export enum CardType {
-  Debit = 'Debit',
-  Credit = 'Credit',
-}
+import { RootAccountState } from '../../features/accounts/types';
 
 export interface BankType {
   BankName: string;
@@ -40,7 +30,9 @@ const validateSchema = Yup.object().shape({
 const CreateAccount = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const { isLoading } = useSelector((store) => store.accounts);
+  const { isLoading } = useSelector(
+    (store: RootAccountState) => store.allAccounts
+  );
   const items = [
     { label: 'Savings', value: 'savings' },
     { label: 'Checking', value: 'checking' },

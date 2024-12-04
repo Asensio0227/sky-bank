@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import Icon from './Icon';
+import Icon from '../Icon';
 
 const UserInfo: React.FC<{ name: any; title: string | any }> = ({
   name,

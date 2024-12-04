@@ -1,11 +1,12 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Account, SearchContainer } from '../../components/acc';
 
 const AllAccounts = () => {
   return (
-    <View>
-      <Text>AllAccounts</Text>
-    </View>
+    <>
+      <SearchContainer />
+      <Account />
+    </>
   );
 };
 

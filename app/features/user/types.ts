@@ -10,7 +10,7 @@ export enum Roles {
 }
 
 export enum SortOptions {
-  Latest = 'latest',
+  Latest = 'newest',
   Oldest = 'oldest',
   AtoZ = 'a-z',
   ZtoA = 'z-a',
@@ -18,8 +18,8 @@ export enum SortOptions {
 
 export interface FilterState {
   search: string;
-  roles: Roles;
-  rolesOptions: Roles[];
+  roles?: Roles;
+  rolesOptions?: Roles[];
   sort: SortOptions;
   sortOptions: SortOptions[];
   searchType?: string;
