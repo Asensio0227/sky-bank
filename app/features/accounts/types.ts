@@ -19,6 +19,7 @@ export interface accState extends FilterState {
   isLoading: boolean;
   Loader: boolean;
   account: accType[];
+  userAccount: accType[];
   singleAccount: accType | any | null;
   modalVisible: boolean;
   totalAccount: number;

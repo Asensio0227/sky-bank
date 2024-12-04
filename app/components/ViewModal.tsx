@@ -1,24 +1,78 @@
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Modal, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  Alert,
+  Modal,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { palette } from '../constants/Colors';
 import { styles } from '../constants/styles';
-import { closeModal } from '../features/accounts/accountsSlice';
+import { closeModal, deleteAccount } from '../features/accounts/accountsSlice';
 import { RootAccountState } from '../features/accounts/types';
+import Button from './custom/Button';
+import Loading from './custom/Loading';
+import Icon from './Icon';
 
 const ViewModal: React.FC = () => {
-  const { singleAccount, modalVisible } = useSelector(
+  const { singleAccount, modalVisible, isLoading } = useSelector(
     (store: RootAccountState) => store.allAccounts
   );
   const dispatch = useDispatch();
-  console.log(`===singleAccount==`);
-  console.log(singleAccount);
-  console.log(`===singleAccount==`);
+
   const handleModal = () => {
     dispatch(closeModal() as any);
   };
+
+  const deleteUserAccount = (id: string) => {
+    try {
+      Alert.alert('Confirm ', 'Are you sure you want to delete this account?', [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel'),
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+            dispatch(deleteAccount(id) as any);
+          },
+        },
+      ]);
+    } catch (error: any) {
+      console.log('Error deleting user account', error);
+    }
+  };
+
+  // const editUserAccount = (id: string) => {
+  //   try {
+  //     Alert.alert('Confirm ', 'Are you sure you want to edit this account?', [
+  //       {
+  //         text: 'Cancel',
+  //         onPress: () => console.log('Cancel'),
+  //         style: 'cancel',
+  //       },
+  //       {
+  //         text: 'OK',
+  //         onPress: () => {
+  //           dispatch(editAccount(id) as any);
+  //         },
+  //       },
+  //     ]);
+  //   } catch (error: any) {
+  //     console.log('Error deleting user account', error);
+  //   }
+  // };
+
+  if (isLoading) return <Loading />;
+
   return (
-    <View style={styles.centerView}>
+    <View style={[styles.centerView, { overflow: 'hidden' }]}>
       <Modal
         animationType='fade'
         transparent={true}
@@ -39,25 +93,25 @@ const ViewModal: React.FC = () => {
               <Text style={styles.text}>Account Information:</Text>
               <View style={wrappers.main}>
                 <Text style={wrappers.mainIcon}>
-                  {singleAccount.accounts[0].accountHolderName
+                  {singleAccount?.accounts[0].accountHolderName
                     .charAt(0)
                     .toUpperCase()}
                 </Text>
                 <View style={wrappers.info}>
                   <Text style={wrappers.title}>
                     Account Holder Name:{' '}
-                    {singleAccount.accounts[0].accountHolderName}
+                    {singleAccount?.accounts[0].accountHolderName}
                   </Text>
                   <Text style={wrappers.subTitle}>
-                    ID Number: {singleAccount.userId.IdeaNumber}
+                    ID Number: {singleAccount?.userId.IdeaNumber}
                   </Text>
                   <Text style={wrappers.subTitle}>
-                    Contact: +263 {singleAccount.userId.phoneNumber}
+                    Contact: +263 {singleAccount?.userId.phoneNumber}
                   </Text>
                 </View>
               </View>
               <View style={wrappers.content}>
-                {singleAccount.accounts.map((item) => {
+                {singleAccount?.accounts.map((item) => {
                   return (
                     <View
                       key={item._id}
@@ -109,7 +163,7 @@ const ViewModal: React.FC = () => {
                       </TouchableOpacity>
                       <TouchableOpacity
                         style={wrappers.deleteBtn}
-                        onPress={() => alert('This is a button!')}
+                        onPress={() => deleteUserAccount(item._id)}
                       >
                         <Icon
                           name='trash-can'
@@ -174,8 +228,9 @@ const wrappers = StyleSheet.create({
     paddingVertical: 10,
   },
   contentCenter: {
-    // borderBottomWidth: 1,
     marginHorizontal: 5,
+    paddingVertical: 35,
+    paddingHorizontal: 10,
   },
   text: {
     fontSize: 14,

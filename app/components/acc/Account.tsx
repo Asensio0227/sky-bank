@@ -1,5 +1,5 @@
 import { useFocusEffect } from '@react-navigation/native';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { FlatList, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { styles } from '../../constants/styles';
@@ -24,16 +24,16 @@ const Account = () => {
     search,
     totalAccount,
     numbOfPages,
+    Loader,
   } = useSelector((store: RootAccountState) => store.allAccounts);
   const dispatch = useDispatch();
-  const [modalVisible, setModalVisible] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
       (async () => {
         await dispatch(getAllAccounts() as any);
       })();
-    }, [page, sort, accountType, search])
+    }, [page, sort, accountType, search, Loader])
   );
 
   if (isLoading) return <Loading />;
@@ -92,19 +92,11 @@ const Account = () => {
                         : require('../../../assets/background/user-icon.png')
                     }
                     onPress={() => {
-                      // setModalVisible(true);
                       dispatch(openModal(item) as any);
-                      console.log(`===modal==`);
-                      console.log(item);
-                      console.log(`===modal==`);
                     }}
                   />
                   <ListSeparator />
-                  <ViewModal
-                  // items={item}
-                  // modalVisible={modalVisible}
-                  // handleModal={() => setModalVisible(!modalVisible)}
-                  />
+                  <ViewModal />
                 </View>
               )}
               scrollEnabled
