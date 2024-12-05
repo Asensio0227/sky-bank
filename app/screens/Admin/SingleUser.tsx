@@ -21,8 +21,8 @@ import {
 } from '../../features/user/userSlice';
 
 const SingleUser = () => {
-  const route = useRoute();
-  const navigation = useNavigation();
+  const route: any = useRoute();
+  const navigation: any = useNavigation();
   const user: userType | any = route.params;
   const { _id } = user;
   const dispatch = useDispatch();

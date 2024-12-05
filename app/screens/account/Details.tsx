@@ -14,37 +14,37 @@ const bankingServices = [
   {
     name: 'Money Transfers',
     icon: 'bank-transfer',
-    path: '/Transfer',
+    path: 'transfer',
   },
   {
     name: 'Refunds',
     icon: 'cash-refund',
-    path: '/Refund',
+    path: 'refund',
   },
   {
     name: 'Loans',
     icon: 'cash-remove',
-    path: '/(auth)/Loans',
+    path: 'loans',
   },
   {
     name: 'Account Management',
     icon: 'card-account-details-outline',
-    path: '/Management',
+    path: 'management',
   },
   {
     name: 'Bill Payments',
     icon: 'billiards',
-    path: '/Transfers',
+    path: 'transfers',
   },
   {
     name: 'Alerts and Notifications',
     icon: 'alert',
-    path: '/(auth)/Notifications',
+    path: 'notify',
   },
   {
     name: 'Customer Support',
     icon: 'help',
-    path: '/(auth)/Help',
+    path: 'help',
   },
 ];
 

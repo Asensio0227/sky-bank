@@ -1,4 +1,5 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {
   Alert,
@@ -18,12 +19,14 @@ import { RootAccountState } from '../features/accounts/types';
 import Button from './custom/Button';
 import Loading from './custom/Loading';
 import Icon from './Icon';
+import ListItems from './list/ListItems';
 
 const ViewModal: React.FC = () => {
   const { singleAccount, modalVisible, isLoading } = useSelector(
     (store: RootAccountState) => store.allAccounts
   );
   const dispatch = useDispatch();
+  const navigation: any = useNavigation();
 
   const handleModal = () => {
     dispatch(closeModal() as any);
@@ -49,25 +52,26 @@ const ViewModal: React.FC = () => {
     }
   };
 
-  // const editUserAccount = (id: string) => {
-  //   try {
-  //     Alert.alert('Confirm ', 'Are you sure you want to edit this account?', [
-  //       {
-  //         text: 'Cancel',
-  //         onPress: () => console.log('Cancel'),
-  //         style: 'cancel',
-  //       },
-  //       {
-  //         text: 'OK',
-  //         onPress: () => {
-  //           dispatch(editAccount(id) as any);
-  //         },
-  //       },
-  //     ]);
-  //   } catch (error: any) {
-  //     console.log('Error deleting user account', error);
-  //   }
-  // };
+  const editUserAccount = (data: any) => {
+    try {
+      Alert.alert('Confirm ', 'Are you sure you want to edit this account?', [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel'),
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+            navigation.navigate('create', data);
+            handleModal();
+          },
+        },
+      ]);
+    } catch (error: any) {
+      console.log('Error deleting user account', error);
+    }
+  };
 
   if (isLoading) return <Loading />;
 
@@ -89,7 +93,7 @@ const ViewModal: React.FC = () => {
             <Pressable style={[styles.buttonClose]} onPress={handleModal}>
               <MaterialCommunityIcons name='window-close' size={20} />
             </Pressable>
-            <View style={styles.view}>
+            <View>
               <Text style={styles.text}>Account Information:</Text>
               <View style={wrappers.main}>
                 <Text style={wrappers.mainIcon}>
@@ -111,7 +115,7 @@ const ViewModal: React.FC = () => {
                 </View>
               </View>
               <View style={wrappers.content}>
-                {singleAccount?.accounts.map((item) => {
+                {singleAccount?.accounts.map((item: any) => {
                   return (
                     <View
                       key={item._id}
@@ -153,7 +157,7 @@ const ViewModal: React.FC = () => {
                       </View>
                       <TouchableOpacity
                         style={wrappers.editBtn}
-                        onPress={() => alert('This is a button!')}
+                        onPress={() => editUserAccount(item)}
                       >
                         <Icon
                           color='edit'
@@ -171,6 +175,14 @@ const ViewModal: React.FC = () => {
                           backgroundColor='#ec7f7f'
                         />
                       </TouchableOpacity>
+                      <View style={{ marginVertical: 10 }}>
+                        <Text style={wrappers.text}>Created By:</Text>
+                        <ListItems
+                          image={require('../../assets/background/user-icon.png')}
+                          title={`${item.createdBy.firstName}, ${item.createdBy.lastName}, `}
+                          subTitle={`+263 ${item.createdBy.phoneNumber}`}
+                        />
+                      </View>
                     </View>
                   );
                 })}

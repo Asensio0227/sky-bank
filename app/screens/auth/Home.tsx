@@ -1,5 +1,5 @@
-import { Link, useNavigation } from '@react-navigation/native';
-import { useState } from 'react';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useCallback } from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -7,85 +7,106 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import Title from '../../components/Title';
 import { palette } from '../../constants/Colors';
-
-const accData = [
-  {
-    id: 'ibgx74oy',
-    accType: 'savings',
-    accNumber: 6774179487,
-    balance: 0,
-  },
-  {
-    id: '258y3tgh',
-    accType: 'checking',
-    accNumber: 6774179487,
-    balance: 669437369,
-  },
-  {
-    id: 'q345to78xy34nr',
-    accType: 'loan',
-    accNumber: 6774179487,
-    balance: 6437,
-  },
-  {
-    id: 'q345to78xy34gnr',
-    accType: 'checking',
-    accNumber: 6774179487,
-    balance: 6437,
-  },
-  {
-    id: 'q345to78vxy34nr',
-    accType: 'savings',
-    accNumber: 6774179487,
-    balance: 0,
-  },
-];
+import { wrapper } from '../../constants/styles';
+import { getAllUserAcc } from '../../features/accounts/accountsSlice';
+import { RootAccountState } from '../../features/accounts/types';
+import { hideLoading } from '../../features/user/userSlice';
 
 export default function HomeScreen() {
-  const router = useNavigation();
-  const [account, setAccount] = useState(accData);
+  const navigation: any = useNavigation();
+  const { userAccounts, userAccountsTotal } = useSelector(
+    (store: RootAccountState) => store.allAccounts
+  );
+  const dispatch = useDispatch();
 
-  if (account.length < 1) {
+  useFocusEffect(
+    useCallback(() => {
+      (async () => {
+        try {
+          await dispatch(getAllUserAcc() as any);
+        } catch (error: any) {
+          console.log('Error while fetching user accounts : ', error);
+        }
+      })();
+    }, [dispatch])
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(hideLoading());
+    }, [])
+  );
+
+  if (userAccounts.length < 1) {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text style={styles.title}>
           No bank account linked with your user account.
         </Text>
-        <Link href='/add' style={styles.createButton}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('add')}
+          style={styles.createButton}
+        >
           <Text style={{ textAlign: 'center', textTransform: 'capitalize' }}>
             add account
           </Text>
-        </Link>
+        </TouchableOpacity>
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
+      <View style={{ marginVertical: 15, paddingVertical: 5 }}>
+        <Text style={styles.title}>Your Bank Accounts</Text>
+        <View style={wrapper.between}>
+          <Text>
+            {userAccountsTotal} bank{userAccounts.length > 1 && 's'} found
+          </Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('add')}
+            style={[styles.create]}
+          >
+            <Text
+              style={[
+                wrapper.header,
+                {
+                  color: palette.primary,
+                  fontWeight: '700',
+                  textDecorationLine: 'underline',
+                  textDecorationStyle: 'double',
+                  letterSpacing: 3,
+                },
+              ]}
+            >
+              Add Account
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
       <FlatList
-        data={account}
+        data={userAccounts}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() => {
-              router.navigate({
-                name: '/Details',
-                params: item,
-              });
+              navigation.navigate('details', item);
             }}
           >
             <View style={styles.section}>
               <View style={styles.sectionCenter}>
-                <Text style={styles.char}>{item.accType.charAt(0)}</Text>
+                <Title style={styles.char} title={item.accountType} />
               </View>
               <View style={{ padding: 2 }}>
                 <Text style={{ textTransform: 'capitalize' }}>
                   Acc Type:{' '}
-                  <Text style={{ color: palette.red }}>{item.accType}</Text>
+                  <Text style={{ color: palette.red }}>{item.accountType}</Text>
                 </Text>
                 <Text>
-                  Account : <Text>{item.accNumber}</Text>
+                  Account : <Text>{item.accountNumber}</Text>
                 </Text>
                 <Text>
                   Balance: $
@@ -103,17 +124,22 @@ export default function HomeScreen() {
             </View>
           </TouchableOpacity>
         )}
+        scrollEnabled
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  create: {
+    left: 18,
+  },
   createButton: {
     backgroundColor: palette.secondaryLight,
     width: '90%',
     alignItems: 'center',
     borderRadius: 5,
+    padding: 10,
     boxShadow: '0 0 5px 0 rgba(0,0,0,0.5)',
   },
   container: {

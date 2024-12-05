@@ -13,7 +13,7 @@ import { RootState } from '../../features/auth/types';
 
 const VerifyEmail = () => {
   const { isLoading } = useSelector((store: RootState) => store.auth);
-  const navigation = useNavigation();
+  const navigation: any = useNavigation();
   const dispatch = useDispatch();
 
   const handleChange = async (data: userType) => {

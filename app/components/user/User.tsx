@@ -6,7 +6,7 @@ import { userType } from '../form/Form';
 
 const User: React.FC<{ user: userType }> = ({ user }) => {
   const { lastName, firstName, phoneNumber, dob, avatar } = user;
-  const navigation = useNavigation();
+  const navigation: any = useNavigation();
   return (
     <>
       <TouchableOpacity

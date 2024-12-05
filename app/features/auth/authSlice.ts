@@ -169,9 +169,9 @@ export const changePassword = createAsyncThunk<ApiResponse, userType>(
 
 export const clearStore = createAsyncThunk(
   'users/clearStore',
-  async (thunkApi: ThunkAPI) => {
+  async (thunkApi: any) => {
     try {
-      thunkApi.dispatch(logout());
+      thunkApi.dispatch(logout() as any);
       return Promise.resolve();
     } catch (error: any) {
       return Promise.reject();

@@ -8,7 +8,7 @@ const TextLink: React.FC<{ text: string; linkText: string; link: any }> = ({
   linkText,
   link,
 }) => {
-  const navigation = useNavigation();
+  const navigation: any = useNavigation();
   // const router=useRouter()
 
   return (

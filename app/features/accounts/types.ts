@@ -18,8 +18,9 @@ export enum SortOptions {
 export interface accState extends FilterState {
   isLoading: boolean;
   Loader: boolean;
-  account: accType[];
-  userAccount: accType[];
+  accounts: accType[];
+  userAccounts: accType[];
+  userAccountsTotal: number;
   singleAccount: accType | any | null;
   modalVisible: boolean;
   totalAccount: number;

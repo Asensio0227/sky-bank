@@ -32,7 +32,7 @@ const validateSchema = Yup.object().shape({
 });
 
 const Register = () => {
-  const navigation = useNavigation();
+  const navigation: any = useNavigation();
   const { isLoading } = useSelector((store: RootState) => store.auth);
   const dispatch = useDispatch();
 

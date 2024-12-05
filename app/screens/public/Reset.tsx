@@ -14,7 +14,7 @@ import { RootState } from '../../features/auth/types';
 
 const PwReset = () => {
   const [successfulCreation, setSuccessfulCreation] = useState(false);
-  const navigation = useNavigation();
+  const navigation: any = useNavigation();
   const dispatch = useDispatch();
   const { isLoading } = useSelector((store: RootState) => store.auth);
 

@@ -20,7 +20,7 @@ const AdminNavigation = () => {
       />
       <Stack.Screen
         name='create'
-        options={{ title: 'Create Bank Account' }}
+        options={{ title: 'Bank Account' }}
         component={CreateAccount}
       />
       <Stack.Screen
