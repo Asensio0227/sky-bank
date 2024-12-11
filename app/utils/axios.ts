@@ -1,6 +1,7 @@
 import { ThunkAPI } from '@reduxjs/toolkit';
 import axios from 'axios';
-const url = process.env.EXPO_PUBLIC_URL;
+// const url = process.env.EXPO_PUBLIC_URL;
+const url = `http://192.168.1.102:5000/api/v1`;
 
 const customFetch = axios.create({
   baseURL: `${url}/`,

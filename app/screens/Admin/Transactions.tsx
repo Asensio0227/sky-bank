@@ -6,8 +6,11 @@ import {
   TransactionsContainer,
 } from '../../components/transaction';
 
-const Transaction = () => {
+const Transactions = () => {
   const route: any = useRoute();
+  console.log(`===route===`);
+  console.log(route);
+  console.log(`===route===`);
 
   return (
     <ScrollView style={styles.container}>
@@ -17,7 +20,7 @@ const Transaction = () => {
   );
 };
 
-export default Transaction;
+export default Transactions;
 
 const styles = StyleSheet.create({
   container: {

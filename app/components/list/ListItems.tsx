@@ -45,6 +45,7 @@ const ListItems: React.FC<{
               <Text style={styles.subTitle} numberOfLines={1}>
                 {subTitle}
               </Text>
+              {/* {description} */}
             </View>
             <MaterialCommunityIcons
               name='chevron-double-right'
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 5,
     backgroundColor: palette.white,
     borderRadius: 10,
   },
@@ -83,6 +84,14 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: '700',
+    textTransform: 'capitalize',
+  },
+  content: { width: '90%', maxWidth: 200 },
+  type: {
+    marginVertical: 5,
+    fontWeight: 'bold',
+    color: palette.primaryDark,
+    fontSize: 16,
   },
 });
 

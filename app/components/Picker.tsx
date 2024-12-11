@@ -1,7 +1,7 @@
 import { Picker } from '@react-native-picker/picker';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Option } from './SearchContainer';
+import { StyleSheet, Text, View } from 'react-native';
+import { Option } from './acc/SearchContainer';
 
 const AppPicker: React.FC<{
   items: Option[];
@@ -9,20 +9,28 @@ const AppPicker: React.FC<{
   onValueChange: (value: any) => void | any;
   placeholder?: any;
   style?: any;
-}> = ({ items, selectedValue, onValueChange, placeholder, style }) => {
+  label?: string;
+}> = ({ items, selectedValue, onValueChange, placeholder, style, label }) => {
   return (
-    <View style={[styles.container, style]}>
-      <Picker
-        selectedValue={selectedValue}
-        onValueChange={onValueChange}
-        style={[styles.input]}
-        placeholder={placeholder}
-      >
-        {items.map((option, index) => (
-          <Picker.Item key={index} label={option.label} value={option.value} />
-        ))}
-      </Picker>
-    </View>
+    <>
+      {label && <Text style={styles.text}>{label} :</Text>}
+      <View style={[styles.container, style]}>
+        <Picker
+          selectedValue={selectedValue}
+          onValueChange={onValueChange}
+          style={[styles.input]}
+          placeholder={placeholder}
+        >
+          {items.map((option, index) => (
+            <Picker.Item
+              key={index}
+              label={option.label}
+              value={option.value}
+            />
+          ))}
+        </Picker>
+      </View>
+    </>
   );
 };
 
@@ -33,7 +41,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     color: '#333',
   },
-
+  text: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 10,
+    marginBottom: 5,
+  },
   input: {
     borderColor: '#ccc',
     borderRadius: 5,

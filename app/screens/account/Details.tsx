@@ -22,9 +22,19 @@ const bankingServices = [
     path: 'refund',
   },
   {
-    name: 'Loans',
+    name: 'Transaction',
+    icon: 'cash-refund',
+    path: 'transaction',
+  },
+  {
+    name: 'Loan',
     icon: 'cash-remove',
-    path: 'loans',
+    path: 'loan',
+  },
+  {
+    name: 'Apply For Loan',
+    icon: 'cash-remove',
+    path: 'apply',
   },
   {
     name: 'Account Management',
@@ -34,7 +44,7 @@ const bankingServices = [
   {
     name: 'Bill Payments',
     icon: 'billiards',
-    path: 'transfers',
+    path: 'transfer',
   },
   {
     name: 'Alerts and Notifications',
@@ -51,16 +61,16 @@ const bankingServices = [
 const Details = () => {
   const route = useRoute();
   const params = route.params;
-  const router = useNavigation();
+  const navigation: any = useNavigation();
   return (
     <View style={styles.container}>
       <View style={styles.section}>
         <FlatList
           data={bankingServices}
-          keyExtractor={(_, index) => index}
+          keyExtractor={(_, index) => index.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity
-              onPress={() => router.navigate(item.path, params)}
+              onPress={() => navigation.navigate(item.path, params)}
             >
               <View style={styles.infoContainer}>
                 <Icon

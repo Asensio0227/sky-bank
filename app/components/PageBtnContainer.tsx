@@ -1,16 +1,16 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { palette } from '../../constants/Colors';
+import { useDispatch } from 'react-redux';
+import { palette } from '../constants/Colors';
 
-import { handlePage } from '../../features/accounts/accountsSlice';
-import { RootAccountState } from '../../features/accounts/types';
-import Icon from '../Icon';
+import { handlePage } from '../features/accounts/accountsSlice';
+import Icon from './Icon';
 
-const PageBtnContainer = () => {
-  const { numbOfPages, page } = useSelector(
-    (store: RootAccountState) => store.allAccounts
-  );
+const PageBtnContainer: React.FC<{
+  page: number | any;
+  numbOfPages: number;
+  handlePress: any;
+}> = ({ page, numbOfPages, handlePress }) => {
   const dispatch = useDispatch();
 
   const pages = Array.from({ length: numbOfPages }, (_, index) => {
@@ -22,7 +22,7 @@ const PageBtnContainer = () => {
     if (newPage < 1) {
       newPage = numbOfPages;
     }
-    dispatch(handlePage(newPage));
+    dispatch(handlePress(newPage));
   };
 
   const nextBtn = () => {
@@ -30,7 +30,7 @@ const PageBtnContainer = () => {
     if (newPage > numbOfPages) {
       newPage = 1;
     }
-    dispatch(handlePage(newPage));
+    dispatch(handlePress(newPage));
   };
 
   return (

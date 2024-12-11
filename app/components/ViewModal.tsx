@@ -107,7 +107,7 @@ const ViewModal: React.FC = () => {
                     {singleAccount?.accounts[0].accountHolderName}
                   </Text>
                   <Text style={wrappers.subTitle}>
-                    ID Number: {singleAccount?.userId.IdeaNumber}
+                    ID Number: {singleAccount?.userId.ideaNumber}
                   </Text>
                   <Text style={wrappers.subTitle}>
                     Contact: +263 {singleAccount?.userId.phoneNumber}

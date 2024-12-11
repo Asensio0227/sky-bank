@@ -5,14 +5,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { styles } from '../../constants/styles';
 import {
   getAllAccounts,
+  handlePage,
   openModal,
 } from '../../features/accounts/accountsSlice';
 import { RootAccountState } from '../../features/accounts/types';
 import Loading from '../custom/Loading';
 import ListItems from '../list/ListItems';
 import ListSeparator from '../list/ListSeparator';
+import PageBtnContainer from '../PageBtnContainer';
 import ViewModal from '../ViewModal';
-import PageBtnContainer from './PageBtnContainer';
 
 const Account = () => {
   const {
@@ -103,7 +104,13 @@ const Account = () => {
               showsVerticalScrollIndicator={false}
             />
           </View>
-          {numbOfPages > 1 && <PageBtnContainer />}
+          {/* {numbOfPages > 1 && ( */}
+          <PageBtnContainer
+            page={page}
+            numbOfPages={numbOfPages}
+            handlePress={handlePage}
+          />
+          {/* )} */}
         </View>
       </View>
     </>

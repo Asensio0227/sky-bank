@@ -2,7 +2,13 @@ import { createAsyncThunk, createSlice, ThunkAPI } from '@reduxjs/toolkit';
 import { ToastAndroid } from 'react-native';
 import { BankType } from '../../screens/Admin/CreateAccount';
 import customFetch from '../../utils/axios';
-import { AccountType, accState, FilterState, SortOptions } from './types';
+import {
+  AccountType,
+  accState,
+  accType,
+  FilterState,
+  SortOptions,
+} from './types';
 
 const initialFilterState: FilterState = {
   search: '',
@@ -184,7 +190,7 @@ const accountsSlice = createSlice({
       state,
       {
         payload: { name, value },
-      }: { payload: { name: keyof accState; value: accState[typeof name] } }
+      }: { payload: { name: keyof accType; value: accType[typeof name] } }
     ) => {
       state.page = 1;
       state[name] = value;

@@ -15,7 +15,7 @@ export default Title;
 const styles = StyleSheet.create({
   mainIcon: {
     backgroundColor: palette.primaryDark,
-    padding: 20,
+    padding: 15,
     borderRadius: 5,
     color: 'white',
     fontSize: 30,

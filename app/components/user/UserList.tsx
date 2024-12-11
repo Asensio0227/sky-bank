@@ -1,14 +1,14 @@
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback } from 'react';
-import { FlatList, ScrollView, Text, View } from 'react-native';
+import { FlatList, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { palette } from '../../constants/Colors';
 import { styles } from '../../constants/styles';
 import { RootUserState } from '../../features/user/types';
-import { getAllUsers } from '../../features/user/userSlice';
+import { getAllUsers, handlePage } from '../../features/user/userSlice';
 import Loading from '../custom/Loading';
-import PageBtnContainer from './PageBtnContainer';
+import PageBtnContainer from '../PageBtnContainer';
 import User from './User';
 
 const UserList = () => {
@@ -45,16 +45,24 @@ const UserList = () => {
 
   return (
     <>
-      <ScrollView>
-        <View style={[styles.container, { marginTop: 25 }]}>
+      <View style={[{ flex: 1, overflow: 'scroll' }]}>
+        <View
+          style={{
+            flex: 1,
+            marginTop: 25,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
           <Text style={{ fontWeight: '700' }}>
             {totalUsers} user{users.length > 1 && 's'} found
           </Text>
           <View
             style={{
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              justifyContent: 'space-between',
+              flex: 1,
+              width: '90%',
+              flexWrap: 'nowrap',
+              justifyContent: 'center',
               marginVertical: 20,
               padding: 15,
             }}
@@ -72,7 +80,6 @@ const UserList = () => {
                     marginLeft: 10,
                     marginRight: 10,
                     backgroundColor: palette.secondaryLight,
-                    overflow: 'scroll',
                   }}
                 >
                   <User user={item} />
@@ -81,9 +88,15 @@ const UserList = () => {
               scrollEnabled={true}
             />
           </View>
-          {numOfPages > 1 && <PageBtnContainer />}
+          {numOfPages > 1 && (
+            <PageBtnContainer
+              page={page}
+              numbOfPages={numOfPages}
+              handlePress={handlePage}
+            />
+          )}
         </View>
-      </ScrollView>
+      </View>
     </>
   );
 };

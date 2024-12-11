@@ -1,6 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
 import accountsSlice from './app/features/accounts/accountsSlice';
 import authSlice from './app/features/auth/authSlice';
+import loanSlice from './app/features/loans/loanSlice';
+import transactionSlice from './app/features/transaction/transactionSlice';
 import userSlice from './app/features/user/userSlice';
 
 export const store = configureStore({
@@ -8,6 +10,8 @@ export const store = configureStore({
     auth: authSlice,
     allUser: userSlice,
     allAccounts: accountsSlice,
+    AllTransactions: transactionSlice,
+    Loans: loanSlice,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });

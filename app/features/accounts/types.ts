@@ -56,8 +56,3 @@ export enum AccountType {
   Loan = 'loan',
   Business = 'business',
 }
-export enum CardType {
-  All = 'all',
-  Debit = 'Debit',
-  Credit = 'Credit',
-}

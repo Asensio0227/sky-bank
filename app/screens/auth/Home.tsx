@@ -100,13 +100,22 @@ export default function HomeScreen() {
               <View style={styles.sectionCenter}>
                 <Title style={styles.char} title={item.accountType} />
               </View>
-              <View style={{ padding: 2 }}>
+              <View
+                style={{
+                  padding: 2,
+                  width: '90%',
+                  marginLeft: 20,
+                }}
+              >
                 <Text style={{ textTransform: 'capitalize' }}>
                   Acc Type:{' '}
                   <Text style={{ color: palette.red }}>{item.accountType}</Text>
                 </Text>
                 <Text>
-                  Account : <Text>{item.accountNumber}</Text>
+                  Account :{' '}
+                  <Text style={[styles.title, { padding: 5 }]}>
+                    {item.accountNumber}
+                  </Text>
                 </Text>
                 <Text>
                   Balance: $
@@ -170,9 +179,10 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   sectionCenter: {
-    marginRight: 10,
+    marginRight: 5,
     backgroundColor: palette.primaryDark,
-    width: 100,
+    width: '90%',
+    maxWidth: 60,
     height: 80,
     overflow: 'hidden',
     padding: 5,

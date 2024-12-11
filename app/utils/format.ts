@@ -1,5 +1,6 @@
 // import { Linking } from 'react-native';
 
+import { Option } from '../components/acc/SearchContainer';
 import { userType } from '../components/form/Form';
 
 // const makeCall = (phoneNumber) => {
@@ -49,3 +50,17 @@ export const formData = (user: FormType) => {
   });
   return userObject;
 };
+
+export function formatArray(data: any) {
+  const statusOp: Option[] = data.map((item: string) => {
+    return {
+      label: item.charAt(0).toUpperCase() + item.slice(1),
+      value: item,
+    };
+  });
+  return statusOp;
+}
+
+export function formatValue(value: any) {
+  return Number(value / 100);
+}

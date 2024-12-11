@@ -7,8 +7,9 @@ import AdminHome from '../screens/Admin/AdminHome';
 import AllAccounts from '../screens/Admin/AllAccounts';
 import AllUsers from '../screens/Admin/AllUsers';
 import CreateAccount from '../screens/Admin/CreateAccount';
+import Loans from '../screens/Admin/Loans';
 import SingleUser from '../screens/Admin/SingleUser';
-import Loans from '../screens/route/Loans';
+import Transactions from '../screens/Admin/Transactions';
 
 const AdminNavigation = () => {
   return (
@@ -37,6 +38,11 @@ const AdminNavigation = () => {
         name='loans'
         options={{ title: 'Loans' }}
         component={Loans}
+      />
+      <Stack.Screen
+        name='transactions'
+        options={{ title: 'Transactions' }}
+        component={Transactions}
       />
       <Stack.Screen
         name='user'

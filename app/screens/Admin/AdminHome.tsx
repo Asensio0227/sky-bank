@@ -27,10 +27,20 @@ const adminServices = [
     icon: 'card-multiple-outline',
     path: 'allAccounts',
   },
+  {
+    name: 'Loans',
+    icon: 'cash-remove',
+    path: 'loans',
+  },
+  {
+    name: 'Transactions',
+    icon: 'cash-refund',
+    path: 'transactions',
+  },
 ];
 
 const AdminHome = () => {
-  const router = useNavigation();
+  const router: any = useNavigation();
   return (
     <View style={styles.container}>
       <View style={styles.section}>

@@ -76,8 +76,8 @@ const CreateAccount = () => {
   };
 
   if (isLoading) return <Loading />;
-  const branchCode = accInfo.branchCode.toString();
-  const accountNumber = accInfo.accountNumber.toString();
+  const branchCode = accInfo?.branchCode.toString();
+  const accountNumber = accInfo?.accountNumber.toString();
 
   return (
     <View
