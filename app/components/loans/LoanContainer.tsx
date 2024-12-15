@@ -4,11 +4,20 @@ import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { styles } from '../../constants/styles';
 import { RootState } from '../../features/auth/types';
-import { getAllLoans, setPage } from '../../features/loans/loanSlice';
+import {
+  getAllLoans,
+  getAllLoansAdmin,
+  openModal,
+  setPage,
+} from '../../features/loans/loanSlice';
 import { RootLoansState } from '../../features/loans/types';
+import { showLoading } from '../../features/user/userSlice';
 import Loading from '../custom/Loading';
+import ListItems from '../list/ListItems';
+import ListSeparator from '../list/ListSeparator';
 import PageBtnContainer from '../PageBtnContainer';
 import LoanInfo from './LoanInfo';
+import ViewLoans from './ViewLoans';
 
 const LoanContainer = () => {
   const dispatch: any = useDispatch();
@@ -32,7 +41,9 @@ const LoanContainer = () => {
   useFocusEffect(
     useCallback(() => {
       (async () => {
-        await dispatch(getAllLoans());
+        user.roles !== 'user'
+          ? await dispatch(getAllLoansAdmin())
+          : await dispatch(getAllLoans());
       })();
     }, [
       page,
@@ -49,10 +60,6 @@ const LoanContainer = () => {
 
   const data = user.roles !== 'user' ? loans : userLoans;
 
-  console.log(data.length);
-  console.log(`======data==`);
-  console.log(userLoans.length);
-
   if (data.length === 0) {
     return (
       <View style={wrappers.container}>
@@ -62,10 +69,6 @@ const LoanContainer = () => {
   }
 
   if (isLoading) return <Loading />;
-
-  console.log(loans);
-  console.log(`====loans===`);
-  console.log(`====loans===`);
 
   return (
     <>
@@ -81,12 +84,12 @@ const LoanContainer = () => {
           {user.roles !== 'user' ? (
             <Text style={{ fontWeight: '700' }}>
               {totalLoans} loan
-              {loans.length > 1 && 's'} found
+              {loans.length > 1 ? 's' : ''} found
             </Text>
           ) : (
             <Text style={{ fontWeight: '700' }}>
               {userLoansTotal} loan
-              {userLoans.length > 1 && 's'} found
+              {userLoans.length > 1 ? 's' : ''} found
             </Text>
           )}
           <View
@@ -100,15 +103,47 @@ const LoanContainer = () => {
               padding: 15,
             }}
           >
-            <FlatList
-              data={userLoans}
-              keyExtractor={(item, index) =>
-                (item && item._id) || index.toString()
-              }
-              renderItem={({ item }) => <LoanInfo item={item} />}
-              scrollEnabled
-              showsVerticalScrollIndicator={false}
-            />
+            {user.roles !== 'user' ? (
+              <FlatList
+                data={loans}
+                keyExtractor={(item, index) =>
+                  (item && item._id) || index.toString()
+                }
+                renderItem={({ item }) => (
+                  <View style={{ width: 1400 }}>
+                    <ListItems
+                      title={`${item.userId.firstName}, ${item.userId.lastName}`}
+                      subTitle={`${item.loans.length} loan${
+                        item.loans.length > 1 ? 's' : ''
+                      }`}
+                      image={
+                        item?.userId && item.userId.avatar
+                          ? { uri: item?.userId.avatar }
+                          : require('../../../assets/background/user-icon.png')
+                      }
+                      onPress={() => {
+                        dispatch(openModal(item) as any);
+                        dispatch(showLoading());
+                      }}
+                    />
+                    <ListSeparator />
+                    <ViewLoans />
+                  </View>
+                )}
+                scrollEnabled
+                showsVerticalScrollIndicator={false}
+              />
+            ) : (
+              <FlatList
+                data={userLoans}
+                keyExtractor={(item, index) =>
+                  (item && item._id) || index.toString()
+                }
+                renderItem={({ item }) => <LoanInfo item={item} />}
+                scrollEnabled
+                showsVerticalScrollIndicator={false}
+              />
+            )}
           </View>
           {numbOfPages > 1 && (
             <PageBtnContainer

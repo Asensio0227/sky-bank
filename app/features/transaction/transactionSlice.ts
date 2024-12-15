@@ -85,7 +85,7 @@ export const transferMoney = createAsyncThunk(
 );
 // admin / get all trans
 export const retrieveTransactions = createAsyncThunk(
-  'transactions/single',
+  'transactions/AllTransactions',
   async (_, thunkApi: ThunkAPI) => {
     try {
       const { type, transactionType, sort, status, page, search } =
@@ -101,9 +101,6 @@ export const retrieveTransactions = createAsyncThunk(
       const response = await customFetch.get(
         `transaction/admin?${params.toString()}`
       );
-      console.log(`====response====`);
-      console.log(response);
-      console.log(`====response====`);
       return response.data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(
@@ -175,7 +172,7 @@ const transactionSlice = createSlice({
           0
         );
       });
-    // retrieve single transaction
+    // retrieve all transaction (admin)
     builder
       .addCase(retrieveTransactions.pending, (state) => {
         state.isLoading = true;
@@ -185,15 +182,9 @@ const transactionSlice = createSlice({
         state.transactions = action.payload.transactions;
         state.totalTransactions = action.payload.totalTransactions;
         state.numbOfPages = action.payload.numOfPages;
-        console.log(`======fulfilled====`);
-        console.log(action);
-        console.log(`======fulfilled====`);
       })
       .addCase(retrieveTransactions.rejected, (state, action) => {
         state.isLoading = false;
-        console.log(`====reject=====`);
-        console.log(action);
-        console.log(`====reject=====`);
         ToastAndroid.showWithGravity(
           action.error.message || 'An error occurred',
           15000,

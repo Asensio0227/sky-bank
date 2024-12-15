@@ -77,12 +77,6 @@ const SearchLoanContainer = () => {
 
   const handleClearFilters = () => {
     dispatch(clearFilter());
-    setSelectedLanguage('');
-    setSearchTerm('');
-    setSelected('');
-    setAppStatus('');
-    setEmpStatus('');
-    setLoanTypStatus('');
   };
 
   return (

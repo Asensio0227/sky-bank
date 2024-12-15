@@ -10,6 +10,7 @@ import FormSelector from '../../components/form/FormSelector';
 import SubmitButton from '../../components/form/SubmitButton';
 import { palette } from '../../constants/Colors';
 import { styles, wrapper } from '../../constants/styles';
+import { loanPayment } from '../../features/loans/loanSlice';
 import { transferMoney } from '../../features/transaction/transactionSlice';
 import { RootTransactionState } from '../../features/transaction/types';
 import useLocation from '../../hooks/useLocation';
@@ -38,15 +39,14 @@ const Transfer = () => {
   };
 
   const handlePayment = async (data: any) => {
-    console.log(data);
-
-    // try {
-    //   const accInfo = { ...data, location, id: acc._id };
-    //   await dispatch(loanPayment(accInfo) as any);
-    //   navigation.goBack();
-    // } catch (error: any) {
-    //   console.log(error.message);
-    // }
+    try {
+      const accInfo = { ...data, location, id: acc._id };
+      console.log(accInfo);
+      await dispatch(loanPayment(accInfo) as any);
+      navigation.goBack();
+    } catch (error: any) {
+      console.log(error.message);
+    }
   };
 
   if (isLoading) return <Loading />;

@@ -17,12 +17,12 @@ export function formatDate(rawDate: Date) {
   const date = new Date(rawDate);
   let year = date.getFullYear();
   let month: number | string = date.getMonth() + 1;
-  let day: number | string = date.getDay();
+  let day: number | string = date.getDate();
 
   month = month < 10 ? `0${month}` : month;
   day = day < 10 ? `0${day}` : day;
 
-  return `${day}-${month}-${year}`;
+  return `${year}-${month}-${day}`;
 }
 export interface FormType extends userType {
   firstName: string;
@@ -43,9 +43,9 @@ export const formData = (user: FormType) => {
   }
   formData.append('dob', user.dob);
   formData.append('phoneNumber', user.phoneNumber);
-  let userObject = {};
+  let userObject: any = {};
 
-  formData.forEach((part) => {
+  formData.forEach((part: any) => {
     userObject[part[0]] = part[1];
   });
   return userObject;
@@ -62,5 +62,5 @@ export function formatArray(data: any) {
 }
 
 export function formatValue(value: any) {
-  return Number(value / 100);
+  return Number(value / 100).toFixed(2);
 }

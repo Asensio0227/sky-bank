@@ -67,6 +67,8 @@ const TransactionsContainer: React.FC<{ params: accType }> = ({ params }) => {
 
   const data = user.roles !== 'user' ? transactions : userTransactions;
 
+  console.log(transactions);
+
   if (data.length === 0) {
     return (
       <View style={wrappers.container}>
@@ -124,9 +126,6 @@ const TransactionsContainer: React.FC<{ params: accType }> = ({ params }) => {
                         ? { uri: item?.userId.avatar }
                         : require('../../../assets/background/user-icon.png')
                     }
-                    onPress={() => {
-                      // dispatch(openModal(item) as any);
-                    }}
                     description={item?.description}
                     type={item?.type}
                     accountType={item?.accountType}
@@ -141,7 +140,6 @@ const TransactionsContainer: React.FC<{ params: accType }> = ({ params }) => {
                     transactionDate={item?.createdAt}
                   />
                   <ListSeparator />
-                  {/* <ViewModal /> */}
                 </View>
               )}
               scrollEnabled

@@ -12,7 +12,7 @@ const DatePicker: React.FC<{ name: string; [key: string]: any }> = ({
   name,
   ...otherProps
 }) => {
-  const { setFieldValue, setFieldTouched, values, errors, touched } =
+  const { setFieldValue, setFieldTouched, values, errors, touched }: any =
     useFormikContext();
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(new Date());
@@ -21,7 +21,7 @@ const DatePicker: React.FC<{ name: string; [key: string]: any }> = ({
     setShow(!show);
   };
 
-  const onChange = ({ type }, selectDate: Date) => {
+  const onChange = ({ type }: { type: any }, selectDate: Date) => {
     if (type == 'set') {
       const currentDate = selectDate;
       setDate(currentDate);
@@ -42,7 +42,7 @@ const DatePicker: React.FC<{ name: string; [key: string]: any }> = ({
             mode='date'
             value={date}
             display='spinner'
-            onChange={onChange}
+            onChange={onChange as any}
             minimumDate={new Date('1900-01-01')}
             {...otherProps}
             style={{ backgroundColor: palette.gray }}

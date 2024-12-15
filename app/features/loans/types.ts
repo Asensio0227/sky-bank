@@ -25,6 +25,8 @@ export interface loansState extends FilterState {
   page: number;
   numbOfPages?: number;
   loanBalance?: number;
+  monthlyPayment?: number;
+  totalPayments?: number;
 }
 
 export interface loanType {
@@ -57,6 +59,7 @@ export interface loanType {
   startDate?: Date;
   endDate?: Date;
   description?: string;
+  monthlyPayment?: number;
 }
 
 export interface loanDurationPayment {

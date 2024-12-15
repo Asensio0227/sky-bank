@@ -5,6 +5,7 @@ import { SortOptions } from '../accounts/types';
 import {
   applicationStatusOptions,
   employmentStatusOptions,
+  loanType,
   loanTypeOptions,
   statusOptions,
 } from './types';
@@ -24,7 +25,7 @@ const filterState = {
 };
 
 const initialState = {
-  isLoading: false,
+  isLoading: true,
   loans: [],
   userLoans: [],
   userLoansTotal: 0,
@@ -34,6 +35,7 @@ const initialState = {
   totalLoans: 0,
   page: 1,
   numbOfPages: 0,
+  monthlyPayment: 0,
   ...filterState,
 };
 
@@ -126,39 +128,21 @@ export const loanPayment = createAsyncThunk(
         amount,
         reference,
         transactionType,
-        // accountNumber
+        accountNumber,
+        location,
       } = data;
       const numericNumber = Number(amount);
-      // const accNumber=Number(accountNumber)
+      const accNumber = Number(accountNumber);
       if (isNaN(numericNumber)) {
         throw new Error('Invalid input value');
       }
       const response = await customFetch.put(`loan/${id}/repay`, {
         amount,
         reference,
-        accountNumber: 42144624424224240,
+        accountNumber: accNumber,
         transactionType,
+        location,
       });
-      console.log(`=====response===`);
-      console.log(response);
-      console.log(`=====response===`);
-      return response.data;
-    } catch (error: any) {
-      return thunkApi.rejectWithValue(
-        error.response.data || 'Error occurred thunk'
-      );
-    }
-  }
-);
-// loan balance (user)
-export const getLoanBalance = createAsyncThunk(
-  'Loans/balance',
-  async (id: string, thunkApi: ThunkAPI) => {
-    try {
-      const response = await customFetch.get(`loan/loan-payment/${id}`);
-      console.log(`=== balance response===`);
-      console.log(response);
-      console.log(`=== balance response===`);
       return response.data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(
@@ -173,9 +157,6 @@ export const retrieveLoanDetails = createAsyncThunk(
   async (id: string, thunkApi: ThunkAPI) => {
     try {
       const response = await customFetch.get(`loan/${id}`);
-      console.log(`=====response====`);
-      console.log(response);
-      console.log(`=====response====`);
       return response.data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(
@@ -209,12 +190,23 @@ export const getAllLoansAdmin = createAsyncThunk(
       });
       let url = `loan/admin?${params.toString()}`;
       const response = await customFetch.get(url);
-      console.log(`===response===`);
-      console.log(response);
-      console.log(`===response===`);
       return response.data;
     } catch (error: any) {
       thunkApi.rejectWithValue(error.response.data || 'Error occurred thunk');
+    }
+  }
+);
+// reject loan (admin)
+export const rejectLoanApplication = createAsyncThunk(
+  'Loans/rejected',
+  async (id: string, thunkApi: ThunkAPI) => {
+    try {
+      const response = await customFetch.patch(`loan/reject/${id}`);
+      return response.data;
+    } catch (error: any) {
+      return thunkApi.rejectWithValue(
+        error.response.data || 'Error occurred thunk'
+      );
     }
   }
 );
@@ -239,9 +231,6 @@ export const calculateLoanMonthlyPayments = createAsyncThunk(
         loanTerm: numericLoanTerm,
         interestRate: numericInterestRate,
       });
-      console.log('===response====');
-      console.log(response);
-      console.log('===response====');
       return response.data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(
@@ -255,34 +244,16 @@ export const approveLoanApplication = createAsyncThunk(
   'Loans/approve',
   async (data: any, thunkApi: ThunkAPI) => {
     try {
-      const { id, monthlyPayment } = data;
+      const { id, monthlyPayment, startDate, endDate } = data;
       const numericMonthlyPayment = Number(monthlyPayment);
       if (isNaN(numericMonthlyPayment)) {
         throw new Error('Invalid input value');
       }
       const response = await customFetch.put(`loan/approve/${id}`, {
         monthlyPayment,
+        startDate,
+        endDate,
       });
-      console.log(`===response===`);
-      console.log(response);
-      console.log(`===response===`);
-      return response.data;
-    } catch (error: any) {
-      return thunkApi.rejectWithValue(
-        error.response.data || 'Error occurred thunk'
-      );
-    }
-  }
-);
-// reject loan (admin)
-export const rejectLoanApplication = createAsyncThunk(
-  'Loans/rejected',
-  async (id: string, thunkApi: ThunkAPI) => {
-    try {
-      const response = await customFetch.patch(`loan/reject/${id}`);
-      console.log(`===response===`);
-      console.log(response);
-      console.log(`===response===`);
       return response.data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(
@@ -301,6 +272,20 @@ const loanSlice = createSlice({
     },
     hideLoading: (state) => {
       state.isLoading = false;
+    },
+    openModal: (state, { payload }) => {
+      return {
+        ...state,
+        singleLoan: payload,
+        modalVisible: true,
+      };
+    },
+    handleModal: (state) => {
+      return {
+        ...state,
+        singleLoan: null,
+        modalVisible: false,
+      };
     },
     handleChange: (state, { payload: { name, value } }) => {
       state.page = 1;
@@ -365,9 +350,6 @@ const loanSlice = createSlice({
       .addCase(loanPayment.fulfilled, (state, action) => {
         state.isLoading = false;
         state.singleLoan = action.payload.data;
-        console.log(`===loan pay fulfilled==v`);
-        console.log(action);
-        console.log(`===loan pay fulfilled==v`);
         ToastAndroid.showWithGravity(
           action.payload.msg || 'Loan payment processed successfully.',
           15000,
@@ -376,25 +358,11 @@ const loanSlice = createSlice({
       })
       .addCase(loanPayment.rejected, (state, action: any) => {
         state.isLoading = false;
-        console.log(`===loan pay rejected==v`);
-        console.log(action);
-        console.log(`===loan pay rejected==v`);
         ToastAndroid.showWithGravity(
           action.payload.msg || 'An error occurred',
           15000,
           0
         );
-      });
-    // get loan balance (user)
-    builder
-      .addCase(getLoanBalance.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(getLoanBalance.fulfilled, (state, action) => {
-        state.isLoading = false;
-      })
-      .addCase(getLoanBalance.rejected, (state, action: any) => {
-        state.isLoading = false;
       });
     // retrieve loan details (...)
     builder
@@ -420,31 +388,64 @@ const loanSlice = createSlice({
       })
       .addCase(getAllLoansAdmin.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.loans = action.payload.loans;
+        state.totalLoans = action.payload.totalLoans;
+        state.numbOfPages = action.payload.numOfPages;
       })
       .addCase(getAllLoansAdmin.rejected, (state, action: any) => {
         state.isLoading = false;
+        ToastAndroid.showWithGravity(
+          action.payload.msg || 'An error occurred',
+          15000,
+          0
+        );
       });
     // calculate loan monthly payments (admin)
     builder
       .addCase(calculateLoanMonthlyPayments.pending, (state) => {
         state.isLoading = true;
+        state.modalVisible = false;
       })
       .addCase(calculateLoanMonthlyPayments.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.monthlyPayment = action.payload.monthlyPayment;
+        ToastAndroid.showWithGravity(
+          'Loan monthly payment calculated successfully.',
+          15000,
+          0
+        );
       })
       .addCase(calculateLoanMonthlyPayments.rejected, (state, action: any) => {
         state.isLoading = false;
+        state.modalVisible = false;
+        ToastAndroid.showWithGravity(
+          action.payload.msg || 'An error occurred',
+          15000,
+          0
+        );
       });
     // approve (admin)
     builder
       .addCase(approveLoanApplication.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(approveLoanApplication.fulfilled, (state, action) => {
+      .addCase(approveLoanApplication.fulfilled, (state: any, action) => {
         state.isLoading = false;
+        state.loans = state.loans.map((loan: loanType) =>
+          loan._id === action.payload._id
+            ? { ...loan, ...action.payload }
+            : loan
+        );
+        ToastAndroid.showWithGravity('Loan Application approved!', 15000, 0);
       })
       .addCase(approveLoanApplication.rejected, (state, action: any) => {
         state.isLoading = false;
+        state.modalVisible = false;
+        ToastAndroid.showWithGravity(
+          action.payload.msg || 'An error occurred',
+          15000,
+          0
+        );
       });
     // reject loan (admin)
     builder
@@ -453,12 +454,27 @@ const loanSlice = createSlice({
       })
       .addCase(rejectLoanApplication.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.modalVisible = false;
+        state.userLoans = state.userLoans.filter(
+          (loan: loanType) => loan._id !== action.payload._id
+        );
+        state.loans = state.loans.filter(
+          (loan: loanType) => loan._id !== action.payload._id
+        );
+        ToastAndroid.showWithGravity('Loan Application rejected!', 15000, 0);
       })
       .addCase(rejectLoanApplication.rejected, (state, action: any) => {
         state.isLoading = false;
+        state.modalVisible = false;
+        ToastAndroid.showWithGravity(
+          action.payload.msg || 'An error occurred',
+          15000,
+          0
+        );
       });
   },
 });
 
-export const { setPage, handleChange, clearFilter } = loanSlice.actions;
+export const { setPage, handleChange, clearFilter, handleModal, openModal } =
+  loanSlice.actions;
 export default loanSlice.reducer;

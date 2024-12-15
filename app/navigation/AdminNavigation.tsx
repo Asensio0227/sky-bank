@@ -6,10 +6,13 @@ import React from 'react';
 import AdminHome from '../screens/Admin/AdminHome';
 import AllAccounts from '../screens/Admin/AllAccounts';
 import AllUsers from '../screens/Admin/AllUsers';
+import Approve from '../screens/Admin/Approve';
+import CalculatePayments from '../screens/Admin/CalculatePayments';
 import CreateAccount from '../screens/Admin/CreateAccount';
 import Loans from '../screens/Admin/Loans';
 import SingleUser from '../screens/Admin/SingleUser';
 import Transactions from '../screens/Admin/Transactions';
+import ReportNavigation from './ReportNavigation';
 
 const AdminNavigation = () => {
   return (
@@ -40,6 +43,16 @@ const AdminNavigation = () => {
         component={Loans}
       />
       <Stack.Screen
+        name='calculate'
+        options={{ title: 'Calculate Loan Payment' }}
+        component={CalculatePayments}
+      />
+      <Stack.Screen
+        name='approve'
+        options={{ title: 'Approve Loan' }}
+        component={Approve}
+      />
+      <Stack.Screen
         name='transactions'
         options={{ title: 'Transactions' }}
         component={Transactions}
@@ -49,6 +62,7 @@ const AdminNavigation = () => {
         options={{ title: 'Person Info' }}
         component={SingleUser}
       />
+      <Stack.Screen name='reports' component={ReportNavigation} />
     </Stack.Navigator>
   );
 };

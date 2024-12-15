@@ -28,14 +28,14 @@ const adminServices = [
     path: 'allAccounts',
   },
   {
-    name: 'Loans',
-    icon: 'cash-remove',
-    path: 'loans',
-  },
-  {
     name: 'Transactions',
     icon: 'cash-refund',
     path: 'transactions',
+  },
+  {
+    name: 'Report',
+    icon: 'source-repository-multiple',
+    path: 'reports',
   },
 ];
 
