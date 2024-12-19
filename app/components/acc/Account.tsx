@@ -1,4 +1,4 @@
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 import { FlatList, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,6 +28,11 @@ const Account = () => {
     Loader,
   } = useSelector((store: RootAccountState) => store.allAccounts);
   const dispatch = useDispatch();
+  const navigation: any = useNavigation();
+
+  const openCreateReport = (item: any) => {
+    navigation.navigate('reports', { screen: 'createReport', params: item });
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -97,20 +102,20 @@ const Account = () => {
                     }}
                   />
                   <ListSeparator />
-                  <ViewModal />
+                  <ViewModal openCreateReport={openCreateReport} />
                 </View>
               )}
               scrollEnabled
               showsVerticalScrollIndicator={false}
             />
           </View>
-          {/* {numbOfPages > 1 && ( */}
-          <PageBtnContainer
-            page={page}
-            numbOfPages={numbOfPages}
-            handlePress={handlePage}
-          />
-          {/* )} */}
+          {numbOfPages > 1 && (
+            <PageBtnContainer
+              page={page}
+              numbOfPages={numbOfPages}
+              handlePress={handlePage}
+            />
+          )}
         </View>
       </View>
     </>

@@ -7,11 +7,12 @@ import { RootState } from '../../features/auth/types';
 import {
   getAllLoans,
   getAllLoansAdmin,
+  hideLoading,
   openModal,
   setPage,
+  showLoading,
 } from '../../features/loans/loanSlice';
 import { RootLoansState } from '../../features/loans/types';
-import { showLoading } from '../../features/user/userSlice';
 import Loading from '../custom/Loading';
 import ListItems from '../list/ListItems';
 import ListSeparator from '../list/ListSeparator';
@@ -35,8 +36,10 @@ const LoanContainer = () => {
     applicationStatus,
     loanType,
     employmentStatus,
+    modalVisible,
   } = useSelector((store: RootLoansState) => store.Loans);
   const { user } = useSelector((store: RootState) => store.auth);
+  console.log(modalVisible);
 
   useFocusEffect(
     useCallback(() => {
@@ -122,8 +125,14 @@ const LoanContainer = () => {
                           : require('../../../assets/background/user-icon.png')
                       }
                       onPress={() => {
-                        dispatch(openModal(item) as any);
                         dispatch(showLoading());
+                        console.log('start');
+                        setTimeout(() => {
+                          console.log('time out');
+                          dispatch(hideLoading());
+                          dispatch(openModal(item) as any);
+                        }, 2000);
+                        console.log('end');
                       }}
                     />
                     <ListSeparator />

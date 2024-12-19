@@ -14,6 +14,7 @@ export type userType = {
   avatar?: string;
   roles?: string;
   token?: string | any;
+  expoToken?: string;
   ideaNumber?: string;
   physicalAddress?: string;
   banned?: boolean;

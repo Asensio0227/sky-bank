@@ -1,5 +1,5 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
@@ -10,7 +10,7 @@ import FormSelector from '../../components/form/FormSelector';
 import SubmitButton from '../../components/form/SubmitButton';
 import { palette } from '../../constants/Colors';
 import { styles, wrapper } from '../../constants/styles';
-import { loanPayment } from '../../features/loans/loanSlice';
+import { hideLoading, loanPayment } from '../../features/loans/loanSlice';
 import { transferMoney } from '../../features/transaction/transactionSlice';
 import { RootTransactionState } from '../../features/transaction/types';
 import useLocation from '../../hooks/useLocation';
@@ -41,7 +41,6 @@ const Transfer = () => {
   const handlePayment = async (data: any) => {
     try {
       const accInfo = { ...data, location, id: acc._id };
-      console.log(accInfo);
       await dispatch(loanPayment(accInfo) as any);
       navigation.goBack();
     } catch (error: any) {
@@ -50,6 +49,10 @@ const Transfer = () => {
   };
 
   if (isLoading) return <Loading />;
+
+  useEffect(() => {
+    dispatch(hideLoading());
+  }, []);
 
   return (
     <View style={{ flex: 1, alignContent: 'center', justifyContent: 'center' }}>

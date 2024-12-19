@@ -47,7 +47,7 @@ const SearchLoanContainer = () => {
 
   useEffect(() => {
     if (isLoading) return;
-    dispatch(handleChange({ name: 'employStatus', value: empStatus }));
+    dispatch(handleChange({ name: 'employmentStatus', value: empStatus }));
   }, [empStatus, isLoading, dispatch]);
 
   useEffect(() => {

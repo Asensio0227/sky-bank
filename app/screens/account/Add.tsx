@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import * as Yup from 'yup';
@@ -7,7 +7,10 @@ import Form from '../../components/form/Form';
 import FormField from '../../components/form/FormField';
 import SubmitButton from '../../components/form/SubmitButton';
 import { palette } from '../../constants/Colors';
-import { linExistingAcc } from '../../features/accounts/accountsSlice';
+import {
+  hideLoading,
+  linExistingAcc,
+} from '../../features/accounts/accountsSlice';
 
 const Add = () => {
   const dispatch = useDispatch();
@@ -21,6 +24,10 @@ const Add = () => {
       console.log('Error while link account', error);
     }
   };
+
+  useEffect(() => {
+    dispatch(hideLoading());
+  }, []);
 
   return (
     <View

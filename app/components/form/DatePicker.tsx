@@ -8,10 +8,11 @@ import { formatDate } from '../../utils/format';
 import AppTextInput from '../custom/TextInput';
 import ErrorMessage from './ErrorMessage';
 
-const DatePicker: React.FC<{ name: string; [key: string]: any }> = ({
-  name,
-  ...otherProps
-}) => {
+const DatePicker: React.FC<{
+  name: string;
+  [key: string]: any;
+  style?: any;
+}> = ({ name, style, ...otherProps }) => {
   const { setFieldValue, setFieldTouched, values, errors, touched }: any =
     useFormikContext();
   const [show, setShow] = useState(false);
@@ -45,7 +46,7 @@ const DatePicker: React.FC<{ name: string; [key: string]: any }> = ({
             onChange={onChange as any}
             minimumDate={new Date('1900-01-01')}
             {...otherProps}
-            style={{ backgroundColor: palette.gray }}
+            style={[{ backgroundColor: palette.gray }, style]}
           />
         </>
       )}
@@ -57,7 +58,7 @@ const DatePicker: React.FC<{ name: string; [key: string]: any }> = ({
             value={values[name]}
             {...otherProps}
             editable={false}
-            style={defaultStyle.input}
+            style={[defaultStyle.input, style]}
           />
           <ErrorMessage error={errors[name]} visible={touched[name]} />
         </Pressable>

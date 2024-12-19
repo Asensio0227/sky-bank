@@ -1,5 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
@@ -9,7 +9,7 @@ import FormField from '../../components/form/FormField';
 import FormSelector from '../../components/form/FormSelector';
 import SubmitButton from '../../components/form/SubmitButton';
 import { palette } from '../../constants/Colors';
-import { applyForLoan } from '../../features/loans/loanSlice';
+import { applyForLoan, hideLoading } from '../../features/loans/loanSlice';
 import { RootLoansState } from '../../features/loans/types';
 import { formatArray } from '../../utils/format';
 
@@ -23,12 +23,12 @@ const validateSchema = Yup.object().shape({
     .required('Please enter loan term')
     .min(1, 'Loan term must be at least 1 year'),
   collateralValue: Yup.number()
-    .required('Please enter interest rate')
+    .required('Please enter collateral value')
     .min(0, 'Interest rate must be a positive number'),
   monthlyPayment: Yup.number()
     .required('Please enter monthly payment')
     .min(1, 'Monthly payment must be at least $1'),
-  collateralType: Yup.string().required('Please enter total interest'),
+  collateralType: Yup.string().required('Please enter collateral type'),
 });
 
 const ApplyForLoan = () => {
@@ -39,15 +39,22 @@ const ApplyForLoan = () => {
   const loanTypeOp = formatArray(loanTypeOptions);
   const dispatch: any = useDispatch();
   const navigation: any = useNavigation();
+  const route: any = useRoute();
+  const acc = route.params;
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (item: any) => {
     try {
+      const data = { accountNumber: acc.accountNumber, ...item };
       await dispatch(applyForLoan(data));
       navigation.goBack();
     } catch (error: any) {
       console.log(`Error occurred: ${error} formik`);
     }
   };
+
+  useEffect(() => {
+    dispatch(hideLoading());
+  }, []);
 
   if (isLoading) return <Loading />;
 

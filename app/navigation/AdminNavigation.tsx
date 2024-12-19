@@ -62,7 +62,11 @@ const AdminNavigation = () => {
         options={{ title: 'Person Info' }}
         component={SingleUser}
       />
-      <Stack.Screen name='reports' component={ReportNavigation} />
+      <Stack.Screen
+        name='reports'
+        options={{ title: 'Audit Account' }}
+        component={ReportNavigation}
+      />
     </Stack.Navigator>
   );
 };

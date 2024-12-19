@@ -1,14 +1,15 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView } from 'react-native';
+import ReportContainer from '../../../components/reports/ReportContainer';
+import SearchReport from '../../../components/reports/SearchReport';
 
 const Report = () => {
   return (
-    <View>
-      <Text>Report</Text>
-    </View>
+    <ScrollView>
+      <SearchReport />
+      <ReportContainer />
+    </ScrollView>
   );
 };
 
 export default Report;
-
-const styles = StyleSheet.create({});

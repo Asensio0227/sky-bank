@@ -1,28 +1,29 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
 const Drawer = createDrawerNavigator();
 
-import React from 'react';
+import { useNavigation } from '@react-navigation/native';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import CustomDrawer from '../components/custom/customDrawer';
 import { palette } from '../constants/Colors';
+import { RootState } from '../features/auth/types';
 import Profile from '../screens/auth/Profile';
-import Help from '../screens/route/Help';
-import Notifications from '../screens/route/Notifications';
+import Notifications from '../screens/message/Notifications';
 import AccountNavigation from './AccountNavigation';
 import AdminNavigation from './AdminNavigation';
-
-type RootStackParamList = {
-  Home: undefined;
-  login: undefined;
-  reset: undefined;
-  register: undefined;
-  verify: undefined;
-  Profile: undefined;
-  notify: undefined;
-  admin: undefined;
-  // admin: undefined;
-};
-
+import HelpNavigation from './HelpNavigation';
 const DrawerNavigation = () => {
+  const { user } = useSelector((store: RootState) => store.auth);
+  const navigation: any = useNavigation();
+
+  useEffect(() => {
+    if (user?.roles === 'user') {
+      navigation.navigate('home');
+    } else {
+      navigation.navigate('dashboard');
+    }
+  }, []);
+
   return (
     <Drawer.Navigator
       screenOptions={{
@@ -48,7 +49,7 @@ const DrawerNavigation = () => {
       <Drawer.Screen
         name='help'
         options={{ title: 'Help&Support' }}
-        component={Help}
+        component={HelpNavigation}
       />
     </Drawer.Navigator>
   );

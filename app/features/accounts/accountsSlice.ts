@@ -413,6 +413,13 @@ const accountsSlice = createSlice({
   },
 });
 
-export const { handleChange, handlePage, clearFilters, openModal, closeModal } =
-  accountsSlice.actions;
+export const {
+  handleChange,
+  handlePage,
+  clearFilters,
+  openModal,
+  closeModal,
+  hideLoading,
+  showLoading,
+} = accountsSlice.actions;
 export default accountsSlice.reducer;

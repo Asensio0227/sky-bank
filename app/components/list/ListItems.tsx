@@ -19,12 +19,14 @@ const ListItems: React.FC<{
   title?: string;
   subTitle?: string;
   image?: any;
+  accountNumber?: any;
 }> = ({
   IconComponent,
   renderLeftActions,
   onPress,
   title,
   subTitle,
+  accountNumber,
   image,
   renderRightActions,
 }) => {
@@ -45,6 +47,11 @@ const ListItems: React.FC<{
               <Text style={styles.subTitle} numberOfLines={1}>
                 {subTitle}
               </Text>
+              {accountNumber && (
+                <Text style={styles.subTitle} numberOfLines={1}>
+                  {accountNumber}
+                </Text>
+              )}
               {/* {description} */}
             </View>
             <MaterialCommunityIcons

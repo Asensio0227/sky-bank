@@ -53,14 +53,17 @@ export const applyForLoan = createAsyncThunk(
         loanTerm,
         loanType,
         monthlyPayment,
+        accountNumber,
       } = data;
       const numericLoanAmount = Number(loanAmount);
+      const numericAccountNumber = Number(accountNumber);
       const numericMonthlyPayment = Number(monthlyPayment);
       const numericIncome = Number(income);
       const numericLoanTerm = Number(loanTerm);
       const numericCollateralValue = Number(collateralValue);
       if (
         isNaN(numericCollateralValue) ||
+        isNaN(numericAccountNumber) ||
         isNaN(numericIncome) ||
         isNaN(numericLoanTerm) ||
         isNaN(numericMonthlyPayment) ||
@@ -78,6 +81,7 @@ export const applyForLoan = createAsyncThunk(
         loanTerm: numericLoanTerm,
         loanType,
         monthlyPayment: numericMonthlyPayment,
+        accountNumber: numericAccountNumber,
       });
       return response.data;
     } catch (error: any) {
@@ -287,7 +291,7 @@ const loanSlice = createSlice({
         modalVisible: false,
       };
     },
-    handleChange: (state, { payload: { name, value } }) => {
+    handleChange: (state: any, { payload: { name, value } }) => {
       state.page = 1;
       state[name] = value;
     },
@@ -475,6 +479,13 @@ const loanSlice = createSlice({
   },
 });
 
-export const { setPage, handleChange, clearFilter, handleModal, openModal } =
-  loanSlice.actions;
+export const {
+  setPage,
+  handleChange,
+  clearFilter,
+  handleModal,
+  openModal,
+  hideLoading,
+  showLoading,
+} = loanSlice.actions;
 export default loanSlice.reducer;

@@ -1,11 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
+import FloatingIcon from '../../components/chat/FloatingIcon';
 
 const Help = () => {
   return (
-    <View>
+    <>
       <Text>Help</Text>
-    </View>
+      <FloatingIcon />
+    </>
   );
 };
 

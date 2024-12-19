@@ -33,6 +33,15 @@ export const Colors = {
 };
 
 export const palette = {
+  backgroundColor: '#F5FCFF',
+  medium: '#4ecdc4',
+  tintColorLight: '#0a7ea4',
+  lightGrey: '#f8f4f4',
+  darkGrey: '#0c0c0c',
+  logout: '#ffe66d',
+  gold: '#e59c5e',
+  text: '#3C3C3C',
+  iconGray: '#717171',
   primary: '#645cff',
   primaryDark: '#282566',
   secondaryDark: '#011f4b',
@@ -40,6 +49,7 @@ export const palette = {
   secondaryLight: '#b3cde0',
   purple: '#8000ff',
   red: '#ff2d55',
+  danger: '#fc5c65',
   green: '#59a388',
   gray: '#cacaca',
   white: '#ffffff',

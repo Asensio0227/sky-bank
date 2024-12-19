@@ -109,7 +109,7 @@ const userSlice = createSlice({
     hideLoading: (state: UserState) => {
       state.isLoading = false;
     },
-    handleChange: (state, { payload: { name, value } }) => {
+    handleChange: (state: any, { payload: { name, value } }) => {
       state.page = 1;
       state[name] = value;
     },

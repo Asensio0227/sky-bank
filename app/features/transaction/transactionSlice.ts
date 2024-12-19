@@ -60,7 +60,7 @@ export const retrieveAllTransactions = createAsyncThunk(
 // transfer
 export const transferMoney = createAsyncThunk(
   'transactions/transfer',
-  async ({ data, id }: { data: any; id: string }, thunkApi: ThunkApi) => {
+  async ({ data, id }: { data: any; id: string }, thunkApi: ThunkAPI) => {
     try {
       const { amount, toAccountNumber } = data;
       const numericAmount = Number(amount);
@@ -120,7 +120,7 @@ const transactionSlice = createSlice({
     hideLoading: (state) => {
       state.isLoading = false;
     },
-    handleChange: (state, { payload: { name, value } }) => {
+    handleChange: (state: any, { payload: { name, value } }) => {
       state.page = 1;
       state[name] = value;
     },
@@ -194,6 +194,6 @@ const transactionSlice = createSlice({
   },
 });
 
-export const { handleChange, handlePage, clearFilter } =
+export const { handleChange, handlePage, clearFilter, hideLoading } =
   transactionSlice.actions;
 export default transactionSlice.reducer;

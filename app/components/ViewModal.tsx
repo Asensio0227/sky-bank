@@ -21,7 +21,9 @@ import Loading from './custom/Loading';
 import Icon from './Icon';
 import ListItems from './list/ListItems';
 
-const ViewModal: React.FC = () => {
+const ViewModal: React.FC<{ openCreateReport: (item: any) => void }> = ({
+  openCreateReport,
+}) => {
   const { singleAccount, modalVisible, isLoading } = useSelector(
     (store: RootAccountState) => store.allAccounts
   );
@@ -175,6 +177,19 @@ const ViewModal: React.FC = () => {
                           backgroundColor='#ec7f7f'
                         />
                       </TouchableOpacity>
+                      <TouchableOpacity
+                        style={wrappers.reportBtn}
+                        onPress={() => {
+                          handleModal();
+                          openCreateReport(item);
+                        }}
+                      >
+                        <Icon
+                          name='book-information-variant'
+                          color='green'
+                          backgroundColor='#10c440'
+                        />
+                      </TouchableOpacity>
                       <View style={{ marginVertical: 10 }}>
                         <Text style={wrappers.text}>Created By:</Text>
                         <ListItems
@@ -216,6 +231,13 @@ const wrappers = StyleSheet.create({
     paddingHorizontal: 5,
   },
   editBtn: { position: 'absolute', top: 10, right: -10, paddingHorizontal: 5 },
+  reportBtn: {
+    position: 'absolute',
+    top: 10,
+    right: 55,
+    marginHorizontal: 25,
+    paddingHorizontal: 5,
+  },
   mainIcon: {
     backgroundColor: palette.primaryDark,
     padding: 20,
