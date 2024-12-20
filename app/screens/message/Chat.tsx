@@ -1,11 +1,42 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
+import { GiftedChat } from 'react-native-gifted-chat';
+import {
+  renderBubble,
+  renderInputToolbar,
+  renderSend,
+} from '../../components/chat/GiftedChat';
+import { palette } from '../../constants/Colors';
 import { useChat } from '../../hooks/useChat';
-// import { GiftedChat } from 'react-native-gifted-chat';
 
 const Chat = () => {
-  const { conversation } = useChat();
-  return <View style={styles.container}>{/* <GiftedChat /> */}</View>;
+  const { messages, onSend, senderUser } = useChat();
+  const user = {
+    username: senderUser.fName,
+    _id: senderUser.userId,
+  };
+
+  return (
+    <View style={styles.container}>
+      <GiftedChat
+        onSend={onSend}
+        messages={messages}
+        user={user}
+        renderAvatar={null}
+        alwaysShowSend
+        timeTextStyle={{ right: { color: palette.iconGray } }}
+        renderSend={renderSend}
+        renderInputToolbar={renderInputToolbar}
+        renderBubble={renderBubble}
+      />
+      {Platform.OS === 'android' && (
+        <KeyboardAvoidingView
+          behavior={Platform.OS !== 'android' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS !== 'android' ? -64 : 0}
+        />
+      )}
+    </View>
+  );
 };
 
 export default Chat;

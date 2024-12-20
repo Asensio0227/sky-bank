@@ -1,11 +1,14 @@
 import { createAsyncThunk, createSlice, ThunkAPI } from '@reduxjs/toolkit';
 import { ToastAndroid } from 'react-native';
+import { GiftedChat } from 'react-native-gifted-chat';
 import customFetch from '../../utils/axios';
 
 const initialState = {
   conversations: [],
   filteredConversations: [],
   messages: [],
+  adminRoom: [],
+  adminMessages: [],
   contact: [],
   isLoading: true,
   page: 1,
@@ -19,8 +22,8 @@ export const retrieveAllAssistant = createAsyncThunk(
       const response = await customFetch.get('user/assistant');
       return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithMessage(
-        error.payload?.msg || 'Error occurred!'
+      return thunkApi.rejectedWithMessage(
+        error.payload?.data || 'Error occurred!'
       );
     }
   }
@@ -31,39 +34,93 @@ export const createConversation = createAsyncThunk(
   async (data: any, thunkApi: ThunkAPI) => {
     try {
       const response = await customFetch.post('room', data);
-      console.log(`-=====response=====`);
-      console.log(response);
-      console.log(`-=====response=====`);
       return response.data;
     } catch (error: any) {
       return thunkApi.rejectedWithValue(
-        error.payload?.msg || 'Error occurred creating room '
+        error.payload.data || 'Error occurred creating room '
       );
     }
   }
 );
-export const retreveAllConversation = createAsyncThunk(
-  'rooms/all rooms',
-  async (thunkApi: ThunkAPI) => {
-    try {
-      const response = await customFetch.get('room', {
-        params: { page: thunkApi.getState().Room.page },
-      });
-      return response.data;
-    } catch (error: any) {
-      return thunkApi.rejectWithMessage(
-        error.payload?.msg || 'Error occurred!'
-      );
-    }
-  }
-);
+// retrieve all room (user)
 export const retrieveUserConversation = createAsyncThunk(
   'rooms/user',
-  async (thunkApi: ThunkAPI) => {}
+  async (_, thunkApi: ThunkAPI) => {
+    try {
+      const state = thunkApi.getState();
+      const user = state.auth.user;
+      const response = await customFetch.get(`room`);
+      return { user, rooms: response.data };
+    } catch (error: any) {
+      return thunkApi.rejectedWithMessage(
+        error.payload.data || 'Error occurred!'
+      );
+    }
+  }
 );
-export const retrieveSingleConversation = createAsyncThunk(
+export const retrieveUpdateConversation = createAsyncThunk(
   'rooms/single',
-  async (id: any, thunkApi: ThunkAPI) => {}
+  async (data: any, thunkApi: ThunkAPI) => {
+    try {
+      const { id, lastMessage } = data;
+      const response = await customFetch.put(`room/${id}`, lastMessage);
+      console.log(`======response===`);
+      console.log(response);
+      console.log(`======response===`);
+      return response.data;
+    } catch (error: any) {
+      return thunkApi.rejectedWithMessage(
+        error.payload.data || 'Error occurred!'
+      );
+    }
+  }
+);
+// =====msg=====
+export const sendMessage = createAsyncThunk(
+  'message/create',
+  async ({ msg, Id }: { msg: any; Id: string | any }, thunkApi: ThunkAPI) => {
+    try {
+      const data = { ...msg, roomId: Id };
+      console.log(`=========`);
+      console.log(data);
+      console.log(`=========`);
+      const response = await customFetch.post('message', data);
+      console.log(`=====response=====`);
+      console.log(response);
+      console.log(`=====response=====`);
+      return response.data;
+    } catch (error: any) {
+      return thunkApi.rejectWithValue(error.response.data);
+    }
+  }
+);
+export const retrieveMessages = createAsyncThunk(
+  'message/retrieve',
+  async (_, thunkApi: ThunkAPI) => {
+    try {
+      const response = await customFetch.get('message');
+      console.log(`====get msg response===`);
+      console.log(response);
+      console.log(`====get msg response===`);
+      return response.data;
+    } catch (error: any) {
+      return thunkApi.rejectWithValue(error.response.data);
+    }
+  }
+);
+export const adminRetrieveMessages = createAsyncThunk(
+  'message/admin',
+  async (_, thunkApi: ThunkAPI) => {
+    try {
+      const response = await customFetch.get('message/admin');
+      console.log(`===admin msg response=====`);
+      console.log(response);
+      console.log(`===admin msg response=====`);
+      return response.data;
+    } catch (error: any) {
+      return thunkApi.rejectWithValue(error.response.data);
+    }
+  }
 );
 
 const roomSlice = createSlice({
@@ -128,6 +185,137 @@ const roomSlice = createSlice({
             ? { ...conv, ...action.payload.room }
             : conv
         );
+      });
+    // retrieve user room
+    builder
+      .addCase(retrieveUserConversation.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(retrieveUserConversation.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const {
+          user,
+          rooms: { rooms },
+        } = action.payload;
+        const email = user.email;
+        const parsedChat =
+          email &&
+          rooms.map((doc: any) => ({
+            ...doc,
+            userB: doc.participants.find((p: any) => p.email !== email),
+          }));
+        state.filteredConversations = parsedChat;
+        state.conversations = parsedChat.filter((doc: any) => doc.lastMessage);
+      })
+      .addCase(retrieveUserConversation.rejected, (state, action: any) => {
+        state.isLoading = false;
+        ToastAndroid.showWithGravity(
+          action.payload?.msg || 'error occurred!',
+          15000,
+          0
+        );
+      });
+    // update room
+    builder
+      .addCase(retrieveUpdateConversation.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(
+        retrieveUpdateConversation.fulfilled,
+        (state: any, action: any) => {
+          state.isLoading = false;
+          state.conversations = state.conversations.map((conv: any) =>
+            conv._id === action.payload.room._id
+              ? { ...conv, ...action.payload.room }
+              : conv
+          );
+          state.filteredConversations = state.filteredConversations.map(
+            (conv: any) =>
+              conv._id === action.payload.room._id
+                ? { ...conv, ...action.payload.room }
+                : conv
+          );
+          console.log(`=====fulfilled====`);
+          console.log(action);
+          console.log(`=====fulfilled====`);
+        }
+      )
+      .addCase(retrieveUpdateConversation.rejected, (state, action: any) => {
+        state.isLoading = false;
+        ToastAndroid.showWithGravity(
+          action.payload?.msg || 'error occurred!',
+          15000,
+          0
+        );
+        console.log(`======rejected===`);
+        console.log(action);
+        console.log(`======rejected===`);
+      });
+    // ===== Messages ====
+    // send message
+    builder
+      .addCase(sendMessage.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(sendMessage.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.messages = action.payload.message;
+        console.log(`======fulfilled===`);
+        console.log(action);
+        console.log(`======fulfilled===`);
+      })
+      .addCase(sendMessage.rejected, (state, action: any) => {
+        state.isLoading = false;
+        ToastAndroid.showWithGravity(
+          action.payload?.msg || 'error occurred!',
+          15000,
+          0
+        );
+        console.log(`======rejected===`);
+        console.log(action);
+        console.log(`======rejected===`);
+      });
+    builder
+      .addCase(retrieveMessages.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(retrieveMessages.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const messages = action.payload.messages.map((message: any) => ({
+          ...message,
+          id: message._id,
+        }));
+        state.messages = GiftedChat.append(state.messages, messages);
+      })
+      .addCase(retrieveMessages.rejected, (state, action: any) => {
+        state.isLoading = false;
+        ToastAndroid.showWithGravity(
+          action.payload?.msg || 'error occurred!',
+          15000,
+          0
+        );
+      });
+    builder
+      .addCase(adminRetrieveMessages.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(adminRetrieveMessages.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.adminMessages = action.payload.message;
+        console.log(`=====fulfilled admin retrieve==== `);
+        console.log(action);
+        console.log(`=====fulfilled admin retrieve==== `);
+      })
+      .addCase(adminRetrieveMessages.rejected, (state, action: any) => {
+        state.isLoading = false;
+        ToastAndroid.showWithGravity(
+          action.payload?.msg || 'error occurred!',
+          15000,
+          0
+        );
+        console.log(`====admin message rejected======`);
+        console.log(action);
+        console.log(`====admin message rejected======`);
       });
   },
 });

@@ -437,6 +437,7 @@ export const authSlice = createSlice({
   },
 });
 
+export const selectUser = (state) => state.auth.user;
 export const { toggleModal, togglePasswordModal, closeModal } =
   authSlice.actions;
 export default authSlice.reducer;

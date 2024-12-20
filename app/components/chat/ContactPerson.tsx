@@ -16,6 +16,9 @@ const ContactPerson: React.FC<{
   image?: any;
 }> = ({ type, description, user, style, time, room, image }) => {
   const navigation: any = useNavigation();
+  console.log(`====room===`);
+  console.log(room);
+  console.log(`====room===`);
 
   return (
     <TouchableOpacity
@@ -39,7 +42,9 @@ const ContactPerson: React.FC<{
             {time && (
               <Col style={{ alignItems: 'flex-end' }}>
                 <Text style={styles.time}>
-                  {type === 'contact' ? `Created on ${formatDate(time)}` : ''}
+                  {type === 'contact'
+                    ? `Created on ${formatDate(time)}`
+                    : time.createdAt}
                 </Text>
               </Col>
             )}
