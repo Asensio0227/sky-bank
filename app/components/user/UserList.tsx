@@ -69,7 +69,7 @@ const UserList = () => {
           >
             <FlatList
               data={users}
-              keyExtractor={(item, index) => item._id || index.toString()}
+              keyExtractor={(item) => item && item._id.toString()}
               renderItem={({ item }) => (
                 <View
                   style={{

@@ -10,7 +10,7 @@ import { palette } from '../../constants/Colors';
 import { useChat } from '../../hooks/useChat';
 
 const Chat = () => {
-  const { messages, onSend, senderUser } = useChat();
+  const { onSend, senderUser, messages, isLoading } = useChat();
   const user = {
     username: senderUser.fName,
     _id: senderUser.userId,
@@ -23,7 +23,7 @@ const Chat = () => {
         messages={messages}
         user={user}
         renderAvatar={null}
-        alwaysShowSend
+        alwaysShowSend={isLoading}
         timeTextStyle={{ right: { color: palette.iconGray } }}
         renderSend={renderSend}
         renderInputToolbar={renderInputToolbar}

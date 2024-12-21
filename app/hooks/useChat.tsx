@@ -5,7 +5,7 @@ import { RootState } from '../features/auth/types';
 import {
   createConversation,
   retrieveMessages,
-  retrieveUserConversation,
+  retrieveUpdateConversation,
   sendMessage,
 } from '../features/room/roomSlice';
 import { RootRoomState } from '../features/room/types';
@@ -13,15 +13,12 @@ import { RootRoomState } from '../features/room/types';
 // import {V4 as uuidV4} from "uuid"
 
 export const useChat = () => {
-  const { messages } = useSelector((store: RootRoomState) => store.Room);
   const route: any = useRoute();
   const { user: userB, image, room } = route.params;
   const dispatch: any = useDispatch();
   const { user: senderUser } = useSelector((store: RootState) => store.auth);
   const roomId = useRef('');
-  console.log(`=========room=======`);
-  console.log(room);
-  console.log(`=========room=======`);
+  const { messages } = useSelector((store: RootRoomState) => store.Room);
 
   useFocusEffect(
     useCallback(() => {
@@ -60,7 +57,6 @@ export const useChat = () => {
           try {
             const resp = await dispatch(createConversation(roomData));
             roomId.current = resp.payload.room._id;
-            console.log(`=====resp=====`);
           } catch (error: any) {
             console.log(error || 'Error occurred!');
           }
@@ -71,25 +67,29 @@ export const useChat = () => {
 
   useFocusEffect(
     useCallback(() => {
-      (async () => {
+      const fetchData = async () => {
         try {
           await dispatch(retrieveMessages());
-        } catch (error: any) {
-          console.log(error || 'Error occurred!');
+        } catch (error) {
+          console.error('Failed to retrieve messages:', error);
         }
-      })();
-    }, [])
+      };
+
+      fetchData();
+    }, [dispatch])
   );
 
   const onSend = async (messages: any = []) => {
+    const id = room._id || roomId.current;
     const writes = messages.map((msg: any) =>
-      dispatch(sendMessage({ msg, Id: roomId.current }))
+      dispatch(sendMessage({ msg, Id: id }))
     );
     const lastMessage = messages[messages.length - 1];
-    const data: any = { id: roomId.current, lastMessage };
-    writes.push(dispatch(retrieveUserConversation(data)));
+    const data: any = { id: id, lastMessage };
+    writes.push(dispatch(retrieveUpdateConversation(data)));
+    writes.push(dispatch(retrieveMessages()));
     await Promise.all(writes);
   };
 
-  return { messages, onSend, senderUser };
+  return { onSend, senderUser, messages };
 };

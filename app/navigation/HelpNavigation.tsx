@@ -1,4 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import ChatHeader from '../components/chat/ChatHeader';
 import Chat from '../screens/message/Chat';
 import Contact from '../screens/message/Contact';
 import Help from '../screens/message/Help';
@@ -12,7 +13,11 @@ const HelpNavigation = () => {
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name='chats' component={Help} />
-      <Stack.Screen name='chat' component={Chat} />
+      <Stack.Screen
+        options={{ headerTitle: (props: any) => <ChatHeader {...props} /> }}
+        name='chat'
+        component={Chat}
+      />
       <Stack.Screen name='contact' component={Contact} />
     </Stack.Navigator>
   );

@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, ThunkAPI } from '@reduxjs/toolkit';
 import { ToastAndroid } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 import customFetch from '../../utils/axios';
+import { messageState } from './types';
 
 const initialState = {
   conversations: [],
@@ -59,19 +60,16 @@ export const retrieveUserConversation = createAsyncThunk(
   }
 );
 export const retrieveUpdateConversation = createAsyncThunk(
-  'rooms/single',
+  'rooms/update',
   async (data: any, thunkApi: ThunkAPI) => {
     try {
       const { id, lastMessage } = data;
-      const response = await customFetch.put(`room/${id}`, lastMessage);
-      console.log(`======response===`);
-      console.log(response);
-      console.log(`======response===`);
+      const response = await customFetch.put(`room/${id}`, {
+        lastMessage: lastMessage,
+      });
       return response.data;
     } catch (error: any) {
-      return thunkApi.rejectedWithMessage(
-        error.payload.data || 'Error occurred!'
-      );
+      return console.log(error || 'Error occurred!');
     }
   }
 );
@@ -80,15 +78,10 @@ export const sendMessage = createAsyncThunk(
   'message/create',
   async ({ msg, Id }: { msg: any; Id: string | any }, thunkApi: ThunkAPI) => {
     try {
-      const data = { ...msg, roomId: Id };
-      console.log(`=========`);
-      console.log(data);
-      console.log(`=========`);
-      const response = await customFetch.post('message', data);
-      console.log(`=====response=====`);
-      console.log(response);
-      console.log(`=====response=====`);
-      return response.data;
+      const user = thunkApi.getState().auth.user;
+      const info = { ...msg, roomId: Id };
+      const { data } = await customFetch.post('message', info);
+      return { user, data };
     } catch (error: any) {
       return thunkApi.rejectWithValue(error.response.data);
     }
@@ -165,7 +158,10 @@ const roomSlice = createSlice({
         const roomExists = state.filteredConversations.some(
           (conv: any) => conv._id === roomId
         );
-        if (!roomExists) {
+        const conExist = state.conversations.some(
+          (conv: any) => conv._id === roomId
+        );
+        if (!roomExists && !conExist) {
           state.filteredConversations = [
             ...state.filteredConversations,
             action.payload.room,
@@ -235,21 +231,15 @@ const roomSlice = createSlice({
                 ? { ...conv, ...action.payload.room }
                 : conv
           );
-          console.log(`=====fulfilled====`);
-          console.log(action);
-          console.log(`=====fulfilled====`);
         }
       )
       .addCase(retrieveUpdateConversation.rejected, (state, action: any) => {
         state.isLoading = false;
         ToastAndroid.showWithGravity(
-          action.payload?.msg || 'error occurred!',
+          action.payload || 'error occurred!',
           15000,
           0
         );
-        console.log(`======rejected===`);
-        console.log(action);
-        console.log(`======rejected===`);
       });
     // ===== Messages ====
     // send message
@@ -257,12 +247,18 @@ const roomSlice = createSlice({
       .addCase(sendMessage.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(sendMessage.fulfilled, (state, action) => {
+      .addCase(sendMessage.fulfilled, (state: any, action) => {
         state.isLoading = false;
-        state.messages = action.payload.message;
-        console.log(`======fulfilled===`);
+        const {
+          data: { message },
+        } = action.payload;
+        const msg: any = { ...message, id: message._id };
+        state.messages = state.messages.map((message: messageState | any) =>
+          message.id === msg.id ? { ...message, ...msg } : message
+        );
+        console.log(`===fulfilled=====`);
         console.log(action);
-        console.log(`======fulfilled===`);
+        console.log(`===fulfilled=====`);
       })
       .addCase(sendMessage.rejected, (state, action: any) => {
         state.isLoading = false;
@@ -271,9 +267,9 @@ const roomSlice = createSlice({
           15000,
           0
         );
-        console.log(`======rejected===`);
+        console.log(`====rejected=====`);
         console.log(action);
-        console.log(`======rejected===`);
+        console.log(`====rejected=====`);
       });
     builder
       .addCase(retrieveMessages.pending, (state) => {
@@ -281,11 +277,21 @@ const roomSlice = createSlice({
       })
       .addCase(retrieveMessages.fulfilled, (state, action) => {
         state.isLoading = false;
-        const messages = action.payload.messages.map((message: any) => ({
-          ...message,
-          id: message._id,
-        }));
-        state.messages = GiftedChat.append(state.messages, messages);
+        const incomingMessages = action.payload.messages.map(
+          (message: messageState) => ({
+            ...message,
+            id: message._id,
+          })
+        );
+        const uniqueMessages = incomingMessages.filter(
+          (incomingMsg: messageState | any) =>
+            !state.messages.some(
+              (existingMsg) => existingMsg.id === incomingMsg.id
+            )
+        );
+
+        // Append only unique messages
+        state.messages = GiftedChat.append(state.messages, uniqueMessages);
       })
       .addCase(retrieveMessages.rejected, (state, action: any) => {
         state.isLoading = false;

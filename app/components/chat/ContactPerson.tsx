@@ -1,4 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
+import moment from 'moment';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { Col, Grid, Row } from 'react-native-easy-grid';
@@ -16,9 +17,6 @@ const ContactPerson: React.FC<{
   image?: any;
 }> = ({ type, description, user, style, time, room, image }) => {
   const navigation: any = useNavigation();
-  console.log(`====room===`);
-  console.log(room);
-  console.log(`====room===`);
 
   return (
     <TouchableOpacity
@@ -44,14 +42,16 @@ const ContactPerson: React.FC<{
                 <Text style={styles.time}>
                   {type === 'contact'
                     ? `Created on ${formatDate(time)}`
-                    : time.createdAt}
+                    : moment().add(time.createdAt, 'days').calendar()}
                 </Text>
               </Col>
             )}
           </Row>
           {description && (
             <Row style={{ marginTop: -5 }}>
-              <Text style={styles.desc}>{description}</Text>
+              <Text style={styles.desc} numberOfLines={1}>
+                {description}
+              </Text>
             </Row>
           )}
         </Col>
@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft: 10,
     fontWeight: 'bold',
+    textTransform: 'capitalize',
   },
   time: {
     color: palette.lightGrey,

@@ -61,7 +61,7 @@ const ViewLoans: React.FC = () => {
             </View>
             <FlatList
               data={singleLoan?.loans}
-              keyExtractor={(item, index) => item._id || index.toString()}
+              keyExtractor={(item) => item && item._id.toString()}
               renderItem={({ item }) => (
                 <View style={wrappers.container}>
                   <LoanBtn item={item} />

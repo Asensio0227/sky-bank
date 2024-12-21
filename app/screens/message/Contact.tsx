@@ -41,7 +41,7 @@ const Contact = () => {
     <>
       <FlatList
         data={contact}
-        keyExtractor={(_id, index) => _id || index.toString()}
+        keyExtractor={(item) => item && item._id.toString()}
         renderItem={({ item }) => (
           <ContactPreview data={item} image={item.avatar} />
         )}

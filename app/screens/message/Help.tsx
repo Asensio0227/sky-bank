@@ -43,11 +43,11 @@ const Help = () => {
       <View style={styles.section}>
         <FlatList
           data={conversations}
-          keyExtractor={({ _id, index }) => _id || index.toString()}
+          keyExtractor={(item) => item && item._id.toString()}
           renderItem={({ item }) => (
             <ContactPerson
               type='chats'
-              description={item.lastMessage.text}
+              description={item.lastMessage?.text}
               style={{ marginTop: 7 }}
               room={item}
               time={item.lastMessage}

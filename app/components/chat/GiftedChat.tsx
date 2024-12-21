@@ -27,7 +27,7 @@ export const renderSend = (props: any) => {
       }}
       onPress={() => {
         if (text && onSend) {
-          onSend({ text: text.trim(), user, _id: user._Id });
+          onSend({ text: text.trim(), user, _id: user._Id }, true);
         }
       }}
     >

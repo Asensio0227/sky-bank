@@ -109,9 +109,7 @@ const LoanContainer = () => {
             {user.roles !== 'user' ? (
               <FlatList
                 data={loans}
-                keyExtractor={(item, index) =>
-                  (item && item._id) || index.toString()
-                }
+                keyExtractor={(item) => item && item._id.toString()}
                 renderItem={({ item }) => (
                   <View style={{ width: 1400 }}>
                     <ListItems
@@ -145,9 +143,7 @@ const LoanContainer = () => {
             ) : (
               <FlatList
                 data={userLoans}
-                keyExtractor={(item, index) =>
-                  (item && item._id) || index.toString()
-                }
+                keyExtractor={(item) => item && item._id.toString()}
                 renderItem={({ item }) => <LoanInfo item={item} />}
                 scrollEnabled
                 showsVerticalScrollIndicator={false}

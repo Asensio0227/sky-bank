@@ -66,7 +66,7 @@ const SingleReport = () => {
       {route.params.reports && route.params.reports.length > 0 ? (
         <FlatList
           data={reports}
-          keyExtractor={({ _id, index }) => _id || index}
+          keyExtractor={(item) => item && item._id.toString()}
           renderItem={({ item }) => (
             <TouchableWithoutFeedback
               onPress={() => navigation.navigate('editReport', item)}

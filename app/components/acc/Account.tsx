@@ -78,7 +78,7 @@ const Account = () => {
           >
             <FlatList
               data={accounts}
-              keyExtractor={(item, index) => item._id || index.toString()}
+              keyExtractor={(item) => item._id.toString()}
               renderItem={({ item }) => (
                 <View
                   style={{

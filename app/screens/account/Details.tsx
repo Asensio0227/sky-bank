@@ -67,7 +67,7 @@ const Details = () => {
       <View style={styles.section}>
         <FlatList
           data={bankingServices}
-          keyExtractor={(_, index) => index.toString()}
+          keyExtractor={(item, index) => `${item.name}-${index}`}
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => navigation.navigate(item.path, params)}

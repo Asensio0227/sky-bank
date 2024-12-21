@@ -113,9 +113,7 @@ const TransactionsContainer: React.FC<{ params: accType }> = ({ params }) => {
           >
             <FlatList
               data={user.roles === 'user' ? transaction : allTransaction}
-              keyExtractor={(item, index) =>
-                (item && item._id) || index.toString()
-              }
+              keyExtractor={(item) => item && item._id.toString()}
               renderItem={({ item }) => (
                 <View style={{ width: 1400 }}>
                   <ViewTransaction

@@ -1,7 +1,11 @@
+import { useRoute } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-const ChatHeader = () => {
+const ChatHeader = (props) => {
+  const route: any = useRoute();
+  console.log(route);
+  console.log(props);
   return (
     <View style={styles.container}>
       <View>{/* <Avatar/> */}</View>
