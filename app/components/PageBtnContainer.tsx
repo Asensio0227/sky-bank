@@ -12,10 +12,44 @@ const PageBtnContainer: React.FC<{
   handlePress: any;
 }> = ({ page, numbOfPages, handlePress }) => {
   const dispatch = useDispatch();
+  const pages = [];
 
-  const pages = Array.from({ length: numbOfPages }, (_, index) => {
-    return index + 1;
-  });
+  // Always show first page
+  pages.push(1);
+
+  // Show dots if needed
+  if (page > 3) {
+    pages.push('...');
+  }
+
+  // Show previous two pages around current page
+  for (
+    let i = Math.max(2, page - 1);
+    i <= Math.min(numbOfPages - 1, page + 1);
+    i++
+  ) {
+    pages.push(i);
+  }
+
+  // Always show active page
+  if (!pages.includes(page)) {
+    pages.push(page);
+  }
+
+  // Show dots if needed
+  if (page < numbOfPages - 2) {
+    pages.push('...');
+  }
+
+  // Always show last page
+  if (numbOfPages > 1) {
+    pages.push(numbOfPages);
+  }
+
+  // show pages without wrapping or showing dots
+  // const pages = Array.from({ length: numbOfPages }, (_, index) => {
+  //   return index + 1;
+  // });
 
   const prevBtn = () => {
     let newPage = page - 1;
@@ -73,6 +107,7 @@ const styles = StyleSheet.create({
   },
   btns: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
   },
   btn: {
     backgroundColor: 'lightgrey',
@@ -81,7 +116,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginHorizontal: 5,
   },
-  container: { marginBottom: 20, height: 30, flexDirection: 'row' },
+  container: {
+    marginBottom: 20,
+    height: 30,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
   nextBtn: {
     marginLeft: 10,
     justifyContent: 'flex-end',

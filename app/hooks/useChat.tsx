@@ -3,22 +3,22 @@ import { useCallback, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../features/auth/types';
 import {
+  adminRetrieveMessages,
   createConversation,
   retrieveMessages,
   retrieveUpdateConversation,
   sendMessage,
+  updateMessage,
 } from '../features/room/roomSlice';
-import { RootRoomState } from '../features/room/types';
-// import 'react-native-get-random-values';
-// import {V4 as uuidV4} from "uuid"
 
 export const useChat = () => {
   const route: any = useRoute();
-  const { user: userB, image, room } = route.params;
+  const { user: userB, room } = route.params;
+  const _id = room?._id;
   const dispatch: any = useDispatch();
   const { user: senderUser } = useSelector((store: RootState) => store.auth);
   const roomId = useRef('');
-  const { messages } = useSelector((store: RootRoomState) => store.Room);
+  const role = senderUser.roles === 'admin';
 
   useFocusEffect(
     useCallback(() => {
@@ -26,10 +26,13 @@ export const useChat = () => {
         if (!room) {
           const currentUser: any = senderUser
             ? {
-                _id: senderUser.userId,
-                username: `${senderUser.firstName} ${senderUser.lastName}`,
+                username:
+                  senderUser.fName ||
+                  `${senderUser.firstName} ${senderUser.lastName}`,
+                _id: senderUser.userId || senderUser._id,
                 email: senderUser.email,
                 expoToken: senderUser.expoToken,
+                role: senderUser.roles,
               }
             : null;
           if (senderUser?.avatar) {
@@ -41,11 +44,13 @@ export const useChat = () => {
             email?: string;
             expoToken?: string;
             avatar?: string;
+            role?: string;
           } = {
             _id: userB._id,
             username: `${userB.firstName} ${userB.lastName}`,
             email: userB.email,
             expoToken: userB.expoToken,
+            role: userB.roles,
           };
           if (userB.avatar) {
             userBData.avatar = userB.avatar;
@@ -62,34 +67,70 @@ export const useChat = () => {
           }
         }
       })();
-    }, [senderUser])
+    }, [senderUser, userB])
   );
 
   useFocusEffect(
     useCallback(() => {
       const fetchData = async () => {
         try {
-          await dispatch(retrieveMessages());
+          if (room && room.user && role) {
+            const user: any = { userId: room?.user._id };
+            await dispatch(adminRetrieveMessages(user));
+            console.log('admin');
+          }
+        } catch (error: any) {
+          console.log(`Error occurred,${error} role`);
+        }
+      };
+      fetchData();
+
+      const intervalId = setInterval(fetchData, 5000);
+
+      return () => clearInterval(intervalId);
+    }, [])
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        try {
+          const id = _id || roomId.current;
+          const resp = await dispatch(retrieveMessages(id));
+          const messages = resp.payload.messages;
+          let lastMessage = messages.length > 0 && messages.slice(0)[0];
+          const data = { id, lastMessage };
+          id &&
+            messages.length > 0 &&
+            (await dispatch(retrieveUpdateConversation(data)));
+          id && (await dispatch(updateMessage(id)));
         } catch (error) {
           console.error('Failed to retrieve messages:', error);
         }
       };
-
       fetchData();
-    }, [dispatch])
+
+      const intervalId = setInterval(fetchData, 5000);
+
+      return () => clearInterval(intervalId);
+    }, [dispatch, roomId, _id])
   );
 
   const onSend = async (messages: any = []) => {
-    const id = room._id || roomId.current;
-    const writes = messages.map((msg: any) =>
-      dispatch(sendMessage({ msg, Id: id }))
-    );
-    const lastMessage = messages[messages.length - 1];
-    const data: any = { id: id, lastMessage };
-    writes.push(dispatch(retrieveUpdateConversation(data)));
-    writes.push(dispatch(retrieveMessages()));
-    await Promise.all(writes);
+    try {
+      const id = _id || roomId.current;
+      const writes = messages.map((msg: any) =>
+        dispatch(sendMessage({ msg, id }))
+      );
+      let lastMessage = messages.length > 0 && messages.slice(0)[0];
+      const data: any = { id, lastMessage };
+      writes.push(dispatch(retrieveUpdateConversation(data)));
+      writes.push(dispatch(retrieveMessages(id)));
+      await Promise.all(writes);
+    } catch (error) {
+      console.error('Failed to retrieve messages:', error);
+    }
   };
 
-  return { onSend, senderUser, messages };
+  return { onSend, senderUser, role };
 };

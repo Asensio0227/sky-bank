@@ -1,35 +1,62 @@
 import { useFocusEffect } from '@react-navigation/native';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import ContactPerson from '../../components/chat/ContactPerson';
 import FloatingIcon from '../../components/chat/FloatingIcon';
-import Loading from '../../components/custom/Loading';
+import PageBtnContainer from '../../components/PageBtnContainer';
+import SearchConversation from '../../components/rooms/SearchConversation';
 import { palette } from '../../constants/Colors';
-import { retrieveUserConversation } from '../../features/room/roomSlice';
+import { RootState } from '../../features/auth/types';
+import {
+  adminRetrieveRoom,
+  retrieveUserConversation,
+  setRoomPage,
+} from '../../features/room/roomSlice';
 import { RootRoomState } from '../../features/room/types';
 
 const Help = () => {
-  const { isLoading, conversations } = useSelector(
+  const { conversations, adminRoom, numbOfPages, page } = useSelector(
     (store: RootRoomState) => store.Room
   );
+  const { user } = useSelector((store: RootState) => store.auth);
   const dispatch: any = useDispatch();
+  const [refreshing, setRefreshing] = useState(false);
+  const rooms = user.roles === 'admin' ? adminRoom : conversations;
 
   useFocusEffect(
     useCallback(() => {
-      (async () => {
+      const fetchData = async () => {
         try {
-          await dispatch(retrieveUserConversation());
+          user.roles === 'admin'
+            ? await dispatch(adminRetrieveRoom())
+            : await dispatch(retrieveUserConversation());
         } catch (error: any) {
           console.log(error || 'Error occurred!');
         }
-      })();
-    }, [])
+      };
+
+      fetchData();
+
+      const intervalId = setInterval(fetchData, 5000);
+
+      return () => clearInterval(intervalId);
+    }, [dispatch, user])
   );
 
-  if (isLoading) return <Loading />;
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      user.roles === 'admin'
+        ? await dispatch(adminRetrieveRoom())
+        : await dispatch(retrieveUserConversation());
+      setRefreshing(false);
+    } catch (error: any) {
+      console.log(error || 'Error occurred!');
+    }
+  };
 
-  if (conversations.length === 0) {
+  if (rooms.length === 0) {
     return (
       <View style={styles.container}>
         <Text style={styles.text}>No conversation found.</Text>
@@ -40,9 +67,21 @@ const Help = () => {
 
   return (
     <>
+      {user.roles === 'admin' && (
+        <>
+          <SearchConversation />
+          {numbOfPages > 1 && (
+            <PageBtnContainer
+              page={page}
+              numbOfPages={1089}
+              handlePress={setRoomPage}
+            />
+          )}
+        </>
+      )}
       <View style={styles.section}>
         <FlatList
-          data={conversations}
+          data={rooms}
           keyExtractor={(item) => item && item._id.toString()}
           renderItem={({ item }) => (
             <ContactPerson
@@ -54,6 +93,10 @@ const Help = () => {
               user={item.userB}
             />
           )}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          scrollEnabled
+          showsVerticalScrollIndicator={false}
         />
       </View>
       <FloatingIcon />

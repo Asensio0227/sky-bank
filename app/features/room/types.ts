@@ -6,10 +6,12 @@ export interface RootRoomState {
 
 export interface messageState {
   _id: string;
+  id?: string;
   text: string;
   avatar: string;
   createdAt: Date;
   user: string | any;
+  isRead: boolean;
 }
 
 export interface roomState {
@@ -20,6 +22,12 @@ export interface roomState {
   page: number;
   numbOfPages: number;
   messages: messageState[];
+  adminRoom: roomType[];
+  adminMessages: messageState[];
+  search: string;
+  totalMessage: number;
+  totalConversation: number;
+  unreadCount: number;
 }
 
 export interface roomType {

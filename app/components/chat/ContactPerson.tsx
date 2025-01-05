@@ -3,7 +3,9 @@ import moment from 'moment';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { Col, Grid, Row } from 'react-native-easy-grid';
+import { useSelector } from 'react-redux';
 import { palette } from '../../constants/Colors';
+import { RootState } from '../../features/auth/types';
 import { formatDate } from '../../utils/format';
 import Avatar from './Avatar';
 
@@ -17,6 +19,11 @@ const ContactPerson: React.FC<{
   image?: any;
 }> = ({ type, description, user, style, time, room, image }) => {
   const navigation: any = useNavigation();
+  const { user: currentUser } = useSelector((store: RootState) => store.auth);
+  const role = currentUser.roles === 'admin';
+  // console.log(`====room=admin===`);
+  // console.log(room);
+  // console.log(`====room=user===`);
 
   return (
     <TouchableOpacity
@@ -35,14 +42,22 @@ const ContactPerson: React.FC<{
         <Col style={{ marginRight: 10 }}>
           <Row style={{ alignItems: 'center' }}>
             <Col>
-              <Text style={styles.text}>{user.firstName}</Text>
+              {role ? (
+                <Text style={styles.text}>
+                  {room && `${room.userId.firstName} ${room.userId.lastName}`}
+                </Text>
+              ) : (
+                <Text style={styles.text}>
+                  {(user && user.firstName) || (user && user.username)}
+                </Text>
+              )}
             </Col>
             {time && (
               <Col style={{ alignItems: 'flex-end' }}>
                 <Text style={styles.time}>
                   {type === 'contact'
                     ? `Created on ${formatDate(time)}`
-                    : moment().add(time.createdAt, 'days').calendar()}
+                    : moment().add(time?.createdAt, 'days').calendar()}
                 </Text>
               </Col>
             )}
@@ -67,6 +82,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#4ecdc5',
     height: 80,
     padding: 5,
+  },
+  unread: {
+    backgroundColor: palette.tintColorLight,
+    borderRadius: 10,
+    width: 20,
+    height: 20,
+    color: palette.white,
+    textAlign: 'center',
   },
   desc: {
     color: palette.gray,

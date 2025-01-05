@@ -7,13 +7,18 @@ import { messageState } from './types';
 const initialState = {
   conversations: [],
   filteredConversations: [],
+  conversationsWithNewMessages: [],
   messages: [],
   adminRoom: [],
   adminMessages: [],
   contact: [],
   isLoading: true,
   page: 1,
+  totalConversation: 0,
+  unreadCount: 0,
+  totalMessage: 0,
   numbOfPages: 0,
+  search: '',
 };
 // all users
 export const retrieveAllAssistant = createAsyncThunk(
@@ -63,11 +68,12 @@ export const retrieveUpdateConversation = createAsyncThunk(
   'rooms/update',
   async (data: any, thunkApi: ThunkAPI) => {
     try {
+      const user = thunkApi.getState().auth.user;
       const { id, lastMessage } = data;
-      const response = await customFetch.put(`room/${id}`, {
-        lastMessage: lastMessage,
+      const { data: resp } = await customFetch.put(`room/${id}`, {
+        lastMessage,
       });
-      return response.data;
+      return { user, resp };
     } catch (error: any) {
       return console.log(error || 'Error occurred!');
     }
@@ -76,10 +82,10 @@ export const retrieveUpdateConversation = createAsyncThunk(
 // =====msg=====
 export const sendMessage = createAsyncThunk(
   'message/create',
-  async ({ msg, Id }: { msg: any; Id: string | any }, thunkApi: ThunkAPI) => {
+  async ({ msg, id }: { msg: any; id: string }, thunkApi: ThunkAPI) => {
     try {
       const user = thunkApi.getState().auth.user;
-      const info = { ...msg, roomId: Id };
+      const info = { ...msg, roomId: id };
       const { data } = await customFetch.post('message', info);
       return { user, data };
     } catch (error: any) {
@@ -89,26 +95,52 @@ export const sendMessage = createAsyncThunk(
 );
 export const retrieveMessages = createAsyncThunk(
   'message/retrieve',
-  async (_, thunkApi: ThunkAPI) => {
+  async (id: string, thunkApi: ThunkAPI) => {
     try {
-      const response = await customFetch.get('message');
-      console.log(`====get msg response===`);
-      console.log(response);
-      console.log(`====get msg response===`);
+      const response = await customFetch.get(`message/${id}`);
       return response.data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(error.response.data);
     }
   }
 );
-export const adminRetrieveMessages = createAsyncThunk(
-  'message/admin',
+// update msg
+export const updateMessage = createAsyncThunk(
+  'message/update',
+  async (id: any, thunkApi: ThunkAPI) => {
+    try {
+      const response = await customFetch.put(`message/${id}`);
+      return response.data;
+    } catch (error: any) {
+      return thunkApi.rejectWithValue(error.response.data);
+    }
+  }
+);
+// all room (admin)
+export const adminRetrieveRoom = createAsyncThunk(
+  'rooms/retrieve/admin',
   async (_, thunkApi: ThunkAPI) => {
     try {
-      const response = await customFetch.get('message/admin');
-      console.log(`===admin msg response=====`);
-      console.log(response);
-      console.log(`===admin msg response=====`);
+      const { page, search } = thunkApi.getState().Room;
+      const params = new URLSearchParams({
+        page: String(page),
+        ...(search && { search }),
+      });
+      let url = `room/admin?${params.toString()}`;
+      const response = await customFetch.get(url);
+      return response.data;
+    } catch (error: any) {
+      return thunkApi.rejectWithValue(error.response.data);
+    }
+  }
+);
+// all msg (admin)
+export const adminRetrieveMessages = createAsyncThunk(
+  'message/admin',
+  async (user: any, thunkApi: ThunkAPI) => {
+    try {
+      const { userId } = user;
+      const response = await customFetch.get(`message/admin/${userId}`);
       return response.data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(error.response.data);
@@ -128,6 +160,15 @@ const roomSlice = createSlice({
     },
     setRoomPage: (state, action) => {
       state.page = action.payload;
+    },
+    handleRoomChange: (state, { payload: { name, value } }) => {
+      state.page = 1;
+      state[name] = value;
+    },
+    clearRoomFilters: (state) => {
+      return {
+        ...state,
+      };
     },
   },
   extraReducers(builder) {
@@ -220,23 +261,81 @@ const roomSlice = createSlice({
         retrieveUpdateConversation.fulfilled,
         (state: any, action: any) => {
           state.isLoading = false;
+          const {
+            resp: { rooms },
+            user,
+          } = action.payload;
           state.conversations = state.conversations.map((conv: any) =>
-            conv._id === action.payload.room._id
-              ? { ...conv, ...action.payload.room }
+            conv._id === rooms._id
+              ? { ...conv, ...rooms, lastMessage: rooms.lastMessage }
               : conv
           );
           state.filteredConversations = state.filteredConversations.map(
             (conv: any) =>
-              conv._id === action.payload.room._id
-                ? { ...conv, ...action.payload.room }
+              conv._id === rooms._id
+                ? { ...conv, ...rooms, lastMessage: rooms.lastMessage }
                 : conv
           );
+          const { email, userId } = user;
+          const newUnreadMessages = state.conversations.filter(
+            (conversation: any) =>
+              conversation.lastMessage &&
+              !conversation.lastMessage.isRead &&
+              conversation.lastMessage.user._id !== userId
+          );
+          const isConversationExists = (
+            conversation: any,
+            existingConversations: any
+          ) => {
+            return existingConversations.some(
+              (existing: any) =>
+                existing.lastMessage._id === conversation.lastMessage_id
+            );
+          };
+          if (state.conversationsWithNewMessages) {
+            const uniqueUnreadMessages = newUnreadMessages.filter(
+              (conversation: any) =>
+                !isConversationExists(
+                  conversation,
+                  state.conversationsWithNewMessages
+                ) &&
+                !state.conversationsWithNewMessages.some(
+                  (existing: any) => existing.lastMessage.isRead
+                )
+            );
+            state.conversationsWithNewMessages = [
+              ...state.conversationsWithNewMessages,
+              ...uniqueUnreadMessages,
+            ];
+          } else {
+            state.conversationsWithNewMessages = newUnreadMessages;
+          }
         }
       )
       .addCase(retrieveUpdateConversation.rejected, (state, action: any) => {
         state.isLoading = false;
         ToastAndroid.showWithGravity(
           action.payload || 'error occurred!',
+          15000,
+          0
+        );
+      });
+    // all room (admin)
+    builder
+      .addCase(adminRetrieveRoom.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(adminRetrieveRoom.fulfilled, (state: any, action) => {
+        state.isLoading = false;
+        const { rooms, totalConversation, numbOfPages } = action.payload;
+        state.totalConversation = totalConversation;
+        state.numbOfPages = numbOfPages;
+        state.adminRoom = rooms;
+      })
+      .addCase(adminRetrieveRoom.rejected, (state, action: any) => {
+        state.isLoading = false;
+        ToastAndroid.showWithGravity(
+          action.payload?.msg || 'error occurred!',
           15000,
           0
         );
@@ -256,9 +355,6 @@ const roomSlice = createSlice({
         state.messages = state.messages.map((message: messageState | any) =>
           message.id === msg.id ? { ...message, ...msg } : message
         );
-        console.log(`===fulfilled=====`);
-        console.log(action);
-        console.log(`===fulfilled=====`);
       })
       .addCase(sendMessage.rejected, (state, action: any) => {
         state.isLoading = false;
@@ -267,10 +363,8 @@ const roomSlice = createSlice({
           15000,
           0
         );
-        console.log(`====rejected=====`);
-        console.log(action);
-        console.log(`====rejected=====`);
       });
+    //  retrieve msg
     builder
       .addCase(retrieveMessages.pending, (state) => {
         state.isLoading = true;
@@ -286,11 +380,25 @@ const roomSlice = createSlice({
         const uniqueMessages = incomingMessages.filter(
           (incomingMsg: messageState | any) =>
             !state.messages.some(
-              (existingMsg) => existingMsg.id === incomingMsg.id
+              (existingMsg: any) => existingMsg.id === incomingMsg.id
             )
         );
-
-        // Append only unique messages
+        const updatedMessages = incomingMessages.filter(
+          (incomingMsg: messageState) => {
+            const existingMsg: messageState | any = state.messages.find(
+              (msg: messageState) => msg.id === incomingMsg.id
+            );
+            return existingMsg && existingMsg.isRead !== incomingMsg.isRead;
+          }
+        );
+        updatedMessages.forEach((updatedMsg: any) => {
+          const index = state.messages.findIndex(
+            (msg: any) => msg.id === updatedMsg.id
+          );
+          if (index !== -1) {
+            state.messages[index] = { ...state.messages[index], ...updatedMsg };
+          }
+        });
         state.messages = GiftedChat.append(state.messages, uniqueMessages);
       })
       .addCase(retrieveMessages.rejected, (state, action: any) => {
@@ -301,16 +409,31 @@ const roomSlice = createSlice({
           0
         );
       });
+    // update msg
+    builder
+      .addCase(updateMessage.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateMessage.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(updateMessage.rejected, (state, action: any) => {
+        state.isLoading = false;
+        ToastAndroid.showWithGravity(
+          action.payload?.msg || 'error occurred!',
+          15000,
+          0
+        );
+      });
+    // all msg (admin)
     builder
       .addCase(adminRetrieveMessages.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(adminRetrieveMessages.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.adminMessages = action.payload.message;
-        console.log(`=====fulfilled admin retrieve==== `);
-        console.log(action);
-        console.log(`=====fulfilled admin retrieve==== `);
+        state.adminMessages = action.payload.messages;
+        state.totalMessage = action.payload.totalMessages;
       })
       .addCase(adminRetrieveMessages.rejected, (state, action: any) => {
         state.isLoading = false;
@@ -319,12 +442,15 @@ const roomSlice = createSlice({
           15000,
           0
         );
-        console.log(`====admin message rejected======`);
-        console.log(action);
-        console.log(`====admin message rejected======`);
       });
   },
 });
 
-export const { showLoading, hideLoading, setRoomPage } = roomSlice.actions;
+export const {
+  showLoading,
+  hideLoading,
+  setRoomPage,
+  handleRoomChange,
+  clearRoomFilters,
+} = roomSlice.actions;
 export default roomSlice.reducer;
