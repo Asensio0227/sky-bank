@@ -9,15 +9,18 @@ import FormField from '../../components/form/FormField';
 import SubmitButton from '../../components/form/SubmitButton';
 import { loginUser } from '../../features/auth/authSlice';
 import { RootState } from '../../features/auth/types';
+import useLocation from '../../hooks/useLocation';
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().email().required('Please enter a valid email'),
-  password: Yup.string().required('Please enter a password'),
+  email: Yup.string().email().required('Please enter a valid email!'),
+  password: Yup.string().required('Please enter a password!'),
+  location: Yup.string(),
 });
 
 const Login = () => {
   const { isLoading } = useSelector((store: RootState) => store.auth);
   const dispatch = useDispatch();
+  const { location } = useLocation();
 
   const onSignInPress = async (data: userType | any) => {
     await dispatch(loginUser(data) as any);
@@ -31,6 +34,7 @@ const Login = () => {
         initialValues={{
           email: '',
           password: '',
+          location: location || '',
         }}
         validationSchema={validationSchema}
         onSubmit={onSignInPress}

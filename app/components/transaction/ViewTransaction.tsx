@@ -29,6 +29,8 @@ const ViewTransaction: React.FC<{
   transactionCharges?: any;
   transactionType?: string;
   transactionDate?: Date;
+  isReversed?: boolean;
+  reversal?: string;
 }> = ({
   IconComponent,
   onPress,
@@ -47,6 +49,8 @@ const ViewTransaction: React.FC<{
   transactionCharges,
   transactionType,
   transactionDate,
+  isReversed,
+  reversal,
 }) => {
   const date = moment(transactionDate).format('MMMM Do YYYY, h:mm:ss a');
 
@@ -100,6 +104,13 @@ const ViewTransaction: React.FC<{
         )}
         {branchCode && (
           <ListInfo icon='barcode' title={branchCode} text='Branch Code' />
+        )}
+        {isReversed && (
+          <ListInfo
+            icon='cash-refund'
+            title={reversal}
+            text='Reversal Status'
+          />
         )}
         {location && (
           <ListInfo icon='google-maps' title={location} text='Location' />

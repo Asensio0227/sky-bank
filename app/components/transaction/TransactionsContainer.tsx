@@ -31,6 +31,7 @@ const TransactionsContainer: React.FC<{ params: accType }> = ({ params }) => {
     isLoading,
     numbOfPages,
     transactions,
+    reversal,
     search,
     totalTransactions,
   } = useSelector((store: RootTransactionState) => store.AllTransactions);
@@ -62,12 +63,11 @@ const TransactionsContainer: React.FC<{ params: accType }> = ({ params }) => {
       transactionType,
       accountType,
       search,
+      reversal,
     ])
   );
 
   const data = user.roles !== 'user' ? transactions : userTransactions;
-
-  console.log(transactions);
 
   if (data.length === 0) {
     return (
@@ -136,6 +136,8 @@ const TransactionsContainer: React.FC<{ params: accType }> = ({ params }) => {
                     transactionCharges={`$${item?.transactionCharges / 100}`}
                     transactionType={item?.transactionType}
                     transactionDate={item?.createdAt}
+                    isReversed={item?.isReversed}
+                    reversal={item.reversalStatus}
                   />
                   <ListSeparator />
                 </View>

@@ -29,6 +29,8 @@ const SearchTransactionContainer = () => {
     status,
     transactionType,
     accountType,
+    reversalOptions,
+    reversal,
     sort,
     search,
   } = useSelector((store: RootTransactionState) => store.AllTransactions);
@@ -38,6 +40,7 @@ const SearchTransactionContainer = () => {
   const [searchTerm, setSearchTerm] = useState(status);
   const [selectedLanguage, setSelectedLanguage] = useState(accountType);
   const [transaction, setTransaction] = useState(transactionType);
+  const [reverse, setReverse] = useState(reversal);
   const [types, setTypes] = useState(type);
   const [selected, setSelected] = useState(sort);
   const list: Option[] = formatArray(accountTypeOptions);
@@ -45,6 +48,7 @@ const SearchTransactionContainer = () => {
   const transactionOp: Option[] = formatArray(transactionOption);
   const typeOp: Option[] = formatArray(typeOptions);
   const statusOp: Option[] = formatArray(statusOptions);
+  const reversalOp: Option[] = formatArray(reversalOptions);
 
   useEffect(() => {
     if (isLoading) return;
@@ -60,6 +64,11 @@ const SearchTransactionContainer = () => {
     if (isLoading) return;
     dispatch(handleChange({ name: 'status', value: searchTerm }));
   }, [searchTerm]);
+
+  useEffect(() => {
+    if (isLoading) return;
+    dispatch(handleChange({ name: 'reversal', value: reverse }));
+  }, [reverse]);
 
   useEffect(() => {
     if (isLoading) return;
@@ -83,6 +92,7 @@ const SearchTransactionContainer = () => {
     setTypes('');
     setSearchTerm('');
     setSelected('');
+    setReverse('');
   };
 
   return (
@@ -131,6 +141,12 @@ const SearchTransactionContainer = () => {
         items={typeOp}
         selectedValue={types}
         onValueChange={(value) => setTypes(value)}
+      />
+      <AppPicker
+        label='Reversals'
+        items={reversalOp}
+        selectedValue={reverse}
+        onValueChange={(value) => setReverse(value)}
       />
       <Button
         title='clear filters'

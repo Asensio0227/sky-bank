@@ -24,7 +24,9 @@ const UserInfo: React.FC<{ name: any; title: string | any }> = ({
         size={40}
         // color="" backgroundColor=''
       />
-      <Text style={{ fontSize: 18, fontWeight: 'bold', marginLeft: 15 }}>
+      <Text
+        style={{ fontSize: 16, fontWeight: 'bold', marginLeft: 15, padding: 3 }}
+      >
         : {title}
       </Text>
     </View>

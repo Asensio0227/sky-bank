@@ -5,7 +5,7 @@ import {
 } from '@react-navigation/native';
 import moment from 'moment';
 import React, { useCallback } from 'react';
-import { Alert, Image, ScrollView, View } from 'react-native';
+import { Alert, Image, ScrollView, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import DropDown from '../../components/DropDown';
 import Button from '../../components/custom/Button';
@@ -19,6 +19,11 @@ import {
   getSingleUser,
   updateUserStatus,
 } from '../../features/user/userSlice';
+
+type location = {
+  location?: string;
+  timestamp?: any;
+};
 
 const SingleUser = () => {
   const route: any = useRoute();
@@ -150,6 +155,38 @@ const SingleUser = () => {
                 name='map-marker-alert-outline'
                 title={singleUser.physicalAddress}
               />
+              {singleUser.loginHistory &&
+                singleUser.loginHistory.length > 0 && (
+                  <View
+                    style={{ justifyContent: 'center', alignItems: 'center' }}
+                  >
+                    <Text
+                      style={{
+                        color: 'green',
+                        textAlign: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      Login history:
+                    </Text>
+                    {singleUser.loginHistory
+                      .filter((item: location) => item.location !== '')
+                      .map((item: location, index) => (
+                        <View key={index}>
+                          <UserInfo
+                            name='map-marker-alert-outline'
+                            title={item.location}
+                          />
+                          <UserInfo
+                            name='update'
+                            title={moment(item.timestamp).format(
+                              'MMMM Do YYYY, h:mm:ss a'
+                            )}
+                          />
+                        </View>
+                      ))}
+                  </View>
+                )}
             </View>
             <Button title='user bank accounts' style={{ margin: 15 }} />
           </View>

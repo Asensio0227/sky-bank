@@ -7,7 +7,9 @@ export type userType = {
   _id?: string;
   fName?: string;
   userId?: string;
+  location?: string;
   firstName?: string;
+  loginHistory?: any;
   lastName?: string;
   gender?: string;
   email?: string;

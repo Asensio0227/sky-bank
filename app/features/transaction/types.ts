@@ -12,6 +12,8 @@ export interface FilterState {
   transactionOption?: transactionOptions[];
   status: statusOptions;
   statusOptions?: statusOptions[];
+  reversal: reversalOptions;
+  reversalOptions?: reversalOptions[];
 }
 
 export interface transactionState extends FilterState {
@@ -48,6 +50,7 @@ export enum transactionOptions {
   Transfer = 'transfer',
   Loan = 'loan',
   Payment = 'payment',
+  Reversal = 'reversal',
 }
 
 export enum statusOptions {
@@ -56,6 +59,13 @@ export enum statusOptions {
   Pending = 'pending',
   Failed = 'failed',
   Canceled = 'canceled',
+}
+
+export enum reversalOptions {
+  All = 'all',
+  Completed = 'completed',
+  Declined = 'declined',
+  Ready = 'ready',
 }
 
 export enum CardType {

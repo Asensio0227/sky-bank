@@ -86,10 +86,11 @@ export const loginUser = createAsyncThunk<ApiResponse, userType>(
   'users/login',
   async (userData: userType, thunkAPI: ThunkAPI) => {
     try {
-      const { email, password } = userData;
+      const { email, password, location } = userData;
       const response = await customFetch.post('auth/login', {
         email,
         password,
+        location,
       });
       return response.data;
     } catch (error: any) {

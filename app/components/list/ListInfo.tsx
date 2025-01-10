@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { palette } from '../../constants/Colors';
-import { wrapper } from '../../constants/styles';
 import Icon from '../Icon';
 
 const ListInfo: React.FC<{
@@ -11,11 +10,11 @@ const ListInfo: React.FC<{
   desc?: boolean;
 }> = ({ title, icon, text, desc }) => {
   return (
-    <View style={desc ? styles.content : [wrapper.between, styles.content]}>
+    <View style={styles.content}>
       {text && (
         <View style={[{ flexDirection: 'row' }]}>
           <Icon name={icon} />
-          <Text style={styles.type}>{text}: </Text>
+          <Text style={[styles.type]}>{text}: </Text>
         </View>
       )}
       <Text
@@ -32,25 +31,30 @@ export default ListInfo;
 
 const styles = StyleSheet.create({
   desc: {
-    fontSize: 14,
+    fontSize: 13,
     width: 300,
     lineHeight: 20,
     padding: 10,
     letterSpacing: 0.4,
   },
   title: {
-    fontWeight: '700',
     textTransform: 'capitalize',
-    width: '90%',
+    width: '100%',
+    fontSize: 14,
+    left: 50,
+    textAlign: 'right',
   },
   content: {
     maxWidth: 150,
     padding: 10,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
   type: {
-    marginVertical: 5,
+    marginVertical: 2,
     fontWeight: 'bold',
     color: palette.primaryDark,
-    fontSize: 16,
+    fontSize: 13,
+    paddingVertical: 5,
   },
 });

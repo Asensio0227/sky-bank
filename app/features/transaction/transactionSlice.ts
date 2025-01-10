@@ -5,6 +5,7 @@ import { AccountType, SortOptions } from '../accounts/types';
 import {
   CardType,
   FilterState,
+  reversalOptions,
   statusOptions,
   transactionOptions,
   transactionState,
@@ -22,6 +23,8 @@ const initialFilterState: FilterState = {
   typeOptions: Object.values(CardType),
   status: statusOptions.All,
   statusOptions: Object.values(statusOptions),
+  reversal: reversalOptions.All,
+  reversalOptions: Object.values(reversalOptions),
 };
 
 const initialState: transactionState = {
@@ -40,12 +43,13 @@ export const retrieveAllTransactions = createAsyncThunk(
   'transactions/retrieveAllTransactions',
   async (accountNumber: any, thunkApi: any) => {
     try {
-      const { type, transactionType, sort, status, page } =
+      const { type, transactionType, sort, status, page, reversal } =
         thunkApi.getState().AllTransactions;
       const params = new URLSearchParams({
         type,
         transactionType,
         sort,
+        reversal,
         status,
         page: String(page),
       });
@@ -88,13 +92,14 @@ export const retrieveTransactions = createAsyncThunk(
   'transactions/AllTransactions',
   async (_, thunkApi: ThunkAPI) => {
     try {
-      const { type, transactionType, sort, status, page, search } =
+      const { type, transactionType, sort, status, page, search, reversal } =
         thunkApi.getState().AllTransactions;
       const params = new URLSearchParams({
         type,
         transactionType,
         sort,
         status,
+        reversal,
         page: String(page),
         ...(search && { search }),
       });
