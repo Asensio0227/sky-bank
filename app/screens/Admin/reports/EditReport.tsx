@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import Loading from '../../../components/custom/Loading';
+import SkeletonContainer from '../../../components/custom/Skeleton';
 import Form from '../../../components/form/Form';
 import FormField from '../../../components/form/FormField';
 import FormSelector from '../../../components/form/FormSelector';
@@ -11,6 +11,7 @@ import SubmitButton from '../../../components/form/SubmitButton';
 import { updateAudit } from '../../../features/reports/reportSlice';
 import { RootReportState } from '../../../features/reports/types';
 import { formatArray } from '../../../utils/format';
+import ProtectedScreen from '../../ProtectedScreen';
 
 const EditReport = () => {
   const { reportOptions, isLoading } = useSelector(
@@ -33,31 +34,33 @@ const EditReport = () => {
     }
   };
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <SkeletonContainer />;
 
   return (
-    <View style={styles.container}>
-      <Form
-        initialValues={{ reportStatus: '', desc: '' }}
-        validationSchema={Yup.object().shape({
-          reportStatus: Yup.string().required('End date is required'),
-          desc: Yup.string().required('Description is required'),
-        })}
-        onSubmit={handleSubmit}
-      >
-        <FormSelector
-          name='reportStatus'
-          placeholder='Report Status'
-          items={reportOp}
-        />
-        <FormField
-          name='card-text'
-          names='desc'
-          placeholder='Reason for audit'
-        />
-        <SubmitButton title='update status' />
-      </Form>
-    </View>
+    <ProtectedScreen>
+      <View style={styles.container}>
+        <Form
+          initialValues={{ reportStatus: '', desc: '' }}
+          validationSchema={Yup.object().shape({
+            reportStatus: Yup.string().required('End date is required'),
+            desc: Yup.string().required('Description is required'),
+          })}
+          onSubmit={handleSubmit}
+        >
+          <FormSelector
+            name='reportStatus'
+            placeholder='Report Status'
+            items={reportOp}
+          />
+          <FormField
+            name='card-text'
+            names='desc'
+            placeholder='Reason for audit'
+          />
+          <SubmitButton title='update status' />
+        </Form>
+      </View>
+    </ProtectedScreen>
   );
 };
 

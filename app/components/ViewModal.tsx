@@ -17,7 +17,7 @@ import { styles } from '../constants/styles';
 import { closeModal, deleteAccount } from '../features/accounts/accountsSlice';
 import { RootAccountState } from '../features/accounts/types';
 import Button from './custom/Button';
-import Loading from './custom/Loading';
+import SkeletonContainer from './custom/Skeleton';
 import Icon from './Icon';
 import ListItems from './list/ListItems';
 
@@ -75,7 +75,7 @@ const ViewModal: React.FC<{ openCreateReport: (item: any) => void }> = ({
     }
   };
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <SkeletonContainer />;
 
   return (
     <View style={[styles.centerView, { overflow: 'hidden' }]}>

@@ -56,6 +56,16 @@ const bankingServices = [
     icon: 'help',
     path: 'help',
   },
+  {
+    name: 'Statement',
+    icon: 'text-box-outline',
+    path: 'statement',
+  },
+  {
+    name: 'Create Statement',
+    icon: 'text-box-outline',
+    path: 'bank',
+  },
 ];
 
 const Details = () => {

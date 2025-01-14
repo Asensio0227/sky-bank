@@ -9,7 +9,7 @@ import {
 } from '../../features/loans/loanSlice';
 import { loanType, RootLoansState } from '../../features/loans/types';
 import Icon from '../Icon';
-import Loading from '../custom/Loading';
+import SkeletonContainer from '../custom/Skeleton';
 
 interface btnsProp {
   name: string;
@@ -68,7 +68,7 @@ const LoanBtn: React.FC<{ item: loanType }> = ({ item }) => {
     navigation.navigate(path, arr), dispatch(handleModal());
   };
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <SkeletonContainer />;
 
   return (
     <View

@@ -4,6 +4,7 @@ import React, { useCallback } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import Loading from '../../components/custom/Loading';
+import SkeletonContainer from '../../components/custom/Skeleton';
 import { palette } from '../../constants/Colors';
 import { RootState } from '../../features/auth/types';
 import { retrieveLoanDetails } from '../../features/loans/loanSlice';
@@ -32,7 +33,7 @@ const Information = () => {
     }, [id])
   );
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <SkeletonContainer />;
 
   return (
     <ScrollView>

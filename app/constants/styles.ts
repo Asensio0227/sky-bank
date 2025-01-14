@@ -4,6 +4,11 @@ const { width, height } = Dimensions.get('window');
 const oneThirdHeight = height / 3;
 
 export const styles = StyleSheet.create({
+  center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   btn: {
     backgroundColor: palette.primaryDark,
     color: palette.white,
@@ -100,6 +105,7 @@ export const wrapper = StyleSheet.create({
     flex: 1,
     padding: 10,
   },
+
   dropDown: {
     padding: 10,
     borderColor: palette.primaryDark,

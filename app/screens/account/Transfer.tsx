@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import Loading from '../../components/custom/Loading';
+import SkeletonContainer from '../../components/custom/Skeleton';
 import Form from '../../components/form/Form';
 import FormField from '../../components/form/FormField';
 import FormSelector from '../../components/form/FormSelector';
@@ -48,7 +48,7 @@ const Transfer = () => {
     }
   };
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <SkeletonContainer />;
 
   useEffect(() => {
     dispatch(hideLoading());

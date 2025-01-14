@@ -3,7 +3,6 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { palette } from '../constants/Colors';
 
-import { handlePage } from '../features/accounts/accountsSlice';
 import Icon from './Icon';
 
 const PageBtnContainer: React.FC<{
@@ -82,7 +81,7 @@ const PageBtnContainer: React.FC<{
               style={
                 pageNumber === page ? [styles.btn, styles.active] : styles.btn
               }
-              onPress={() => dispatch(handlePage(pageNumber))}
+              onPress={() => dispatch(handlePress(pageNumber))}
             >
               <Text>{pageNumber}</Text>
             </Pressable>
@@ -117,7 +116,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   container: {
-    marginBottom: 20,
+    marginVertical: 20,
     height: 30,
     flexDirection: 'row',
     flexWrap: 'wrap',

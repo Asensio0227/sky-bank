@@ -38,3 +38,7 @@ yarn-error.*
 .env-local
 .env-development
 .env-production
+google-services.json
+whatsapp-5664a-firebase-adminsdk-87jif-fc91d8433a.json
+/ios
+/android

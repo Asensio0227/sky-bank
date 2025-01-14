@@ -12,13 +12,13 @@ import { logout } from '../../features/auth/authSlice';
 import { RootState } from '../../features/auth/types';
 
 const CustomDrawer: React.FC = (props) => {
-  const route = useNavigation();
+  const navigation: any = useNavigation();
   const { user, isLoading } = useSelector((store: RootState) => store.auth);
-  const dispatch = useDispatch();
+  const dispatch: any = useDispatch();
 
   async function logoutUser() {
-    await dispatch(logout() as any);
-    route.navigate('login');
+    await dispatch(logout());
+    navigation.navigate('login');
   }
 
   if (isLoading) {
@@ -68,21 +68,21 @@ const CustomDrawer: React.FC = (props) => {
               marginVertical: 10,
             }}
           >
-            {/* <Pressable
+            <Pressable
               onPress={() => {
-                route.navigate('/messages/Chats');
+                navigation.navigate('help');
               }}
             >
               <Text style={{ color: '#dddddd', paddingVertical: 5 }}>
                 Messages
               </Text>
-            </Pressable> */}
+            </Pressable>
           </View>
 
           {/* Do more */}
           <Pressable
             onPress={() => {
-              route.navigate('Profile');
+              navigation.navigate('Profile');
             }}
           >
             <Text style={{ color: '#dddddd', paddingVertical: 5 }}>

@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import React, { useCallback } from 'react';
 import {
   Dimensions,
   Image,
@@ -12,7 +13,6 @@ import Button from '../../components/custom/Button';
 import ModalScreen from '../../components/ModalScreen';
 import { styles } from '../../constants/styles';
 import {
-  loadUser,
   toggleModal,
   togglePasswordModal,
 } from '../../features/auth/authSlice';
@@ -25,11 +25,13 @@ const Profile = () => {
   const dispatch = useDispatch();
   const fullName = user.firstName && `${user.firstName}, ${user.lastName}`;
 
-  useEffect(() => {
-    (async () => {
-      await dispatch(loadUser() as any);
-    })();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      (async () => {
+        // await dispatch(loadUser() as any);
+      })();
+    }, [])
+  );
 
   return (
     <View style={styles.container}>

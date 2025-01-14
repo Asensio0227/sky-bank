@@ -26,6 +26,7 @@ import {
 } from '../../../features/reports/reportSlice';
 import { RootReportState } from '../../../features/reports/types';
 import { formatValue } from '../../../utils/format';
+import ProtectedScreen from '../../ProtectedScreen';
 
 const SingleReport = () => {
   const route: any = useRoute();
@@ -62,11 +63,11 @@ const SingleReport = () => {
   if (isLoading) return <Loading />;
 
   return (
-    <>
+    <ProtectedScreen>
       {route.params.reports && route.params.reports.length > 0 ? (
         <FlatList
           data={reports}
-          keyExtractor={(item) => item && item._id.toString()}
+          keyExtractor={(item) => item && item._id}
           renderItem={({ item }) => (
             <TouchableWithoutFeedback
               onPress={() => navigation.navigate('editReport', item)}
@@ -225,7 +226,7 @@ const SingleReport = () => {
           </View>
         </TouchableWithoutFeedback>
       )}
-    </>
+    </ProtectedScreen>
   );
 };
 

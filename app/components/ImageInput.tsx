@@ -45,6 +45,7 @@ const ImageInput: React.FC<{
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
         quality: 1,
+        aspect: [4, 3],
       });
       if (!result.canceled) onChangeImage(result.assets[0].uri);
     } catch (error: any) {

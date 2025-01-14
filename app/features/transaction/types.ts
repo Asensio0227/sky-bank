@@ -25,6 +25,7 @@ export interface transactionState extends FilterState {
   totalTransactions: number;
   page: number;
   numbOfPages?: number;
+  refunds: transactionType[];
 }
 
 export interface transactionType {

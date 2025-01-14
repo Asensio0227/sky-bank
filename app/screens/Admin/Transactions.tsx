@@ -5,18 +5,18 @@ import {
   SearchTransactionContainer,
   TransactionsContainer,
 } from '../../components/transaction';
+import ProtectedScreen from '../ProtectedScreen';
 
 const Transactions = () => {
   const route: any = useRoute();
-  console.log(`===route===`);
-  console.log(route);
-  console.log(`===route===`);
 
   return (
-    <ScrollView style={styles.container}>
-      <SearchTransactionContainer />
-      <TransactionsContainer params={route.params} />
-    </ScrollView>
+    <ProtectedScreen>
+      <ScrollView style={styles.container}>
+        <SearchTransactionContainer />
+        <TransactionsContainer params={route.params} />
+      </ScrollView>
+    </ProtectedScreen>
   );
 };
 

@@ -82,7 +82,7 @@ const Help = () => {
       <View style={styles.section}>
         <FlatList
           data={rooms}
-          keyExtractor={(item) => item && item._id.toString()}
+          keyExtractor={(item) => item && item._id}
           renderItem={({ item }) => (
             <ContactPerson
               type='chats'

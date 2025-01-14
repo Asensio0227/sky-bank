@@ -9,7 +9,7 @@ const ProtectedScreen: React.FC<{ children: React.ReactNode }> = ({
   const { user } = useSelector((store: RootState) => store.auth);
   const navigation: any = useNavigation();
   if (user.roles === 'user') {
-    return navigation.navigate('home');
+    return navigation.navigate('Home');
   }
   return children;
 };

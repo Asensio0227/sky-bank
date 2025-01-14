@@ -67,7 +67,6 @@ const ViewTransaction: React.FC<{
             <Text style={styles.subTitle} numberOfLines={1}>
               {subTitle}
             </Text>
-            {/* {description} */}
           </View>
           <MaterialCommunityIcons
             name='chevron-double-right'
@@ -160,6 +159,8 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 10,
     justifyContent: 'center',
+    flexWrap: 'wrap',
+    width: 10,
   },
   image: {
     width: 70,

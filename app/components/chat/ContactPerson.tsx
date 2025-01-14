@@ -21,9 +21,6 @@ const ContactPerson: React.FC<{
   const navigation: any = useNavigation();
   const { user: currentUser } = useSelector((store: RootState) => store.auth);
   const role = currentUser.roles === 'admin';
-  // console.log(`====room=admin===`);
-  // console.log(room);
-  // console.log(`====room=user===`);
 
   return (
     <TouchableOpacity

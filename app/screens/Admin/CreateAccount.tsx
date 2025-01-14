@@ -3,7 +3,7 @@ import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import Loading from '../../components/custom/Loading';
+import SkeletonContainer from '../../components/custom/Skeleton';
 import Form from '../../components/form/Form';
 import FormField from '../../components/form/FormField';
 import FormSelector from '../../components/form/FormSelector';
@@ -13,6 +13,7 @@ import {
   editAccount,
 } from '../../features/accounts/accountsSlice';
 import { accType, RootAccountState } from '../../features/accounts/types';
+import ProtectedScreen from '../ProtectedScreen';
 
 export interface BankType {
   BankName: string;
@@ -75,122 +76,125 @@ const CreateAccount = () => {
     }
   };
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <SkeletonContainer />;
+
   const branchCode = accInfo?.branchCode.toString();
   const accountNumber = accInfo?.accountNumber.toString();
 
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      {accInfo ? (
-        <Form
-          initialValues={{
-            branchCode: branchCode,
-            accountNumber: accountNumber,
-            accountType: accInfo.accountType,
-          }}
-          validationSchema={validateEditSchema}
-          onSubmit={handleEditSubmit}
-        >
-          <View
-            style={{
-              marginVertical: 15,
+    <ProtectedScreen>
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        {accInfo ? (
+          <Form
+            initialValues={{
+              branchCode: branchCode,
+              accountNumber: accountNumber,
+              accountType: accInfo.accountType,
             }}
+            validationSchema={validateEditSchema}
+            onSubmit={handleEditSubmit}
           >
-            <Text
+            <View
               style={{
-                textAlign: 'center',
-                fontSize: 18,
-                fontWeight: '700',
-                textTransform: 'capitalize',
+                marginVertical: 15,
               }}
             >
-              edit account
-            </Text>
-          </View>
-          <ScrollView>
-            <FormField
-              name='barcode'
-              names='branchCode'
-              placeholder='Branch code'
-              keyBoardType='numeric'
-            />
-            <FormSelector
-              name='accountType'
-              items={items}
-              placeholder='Account type'
-            />
-            <FormField
-              name='format-list-numbered'
-              names='accountNumber'
-              placeholder='Account number'
-              keyBoardType='numeric'
-            />
-            <SubmitButton title='submit' />
-          </ScrollView>
-        </Form>
-      ) : (
-        <Form
-          initialValues={{
-            BankName: 'Sky Bank',
-            branchCode: 0,
-            accountNumber: 0,
-            accountType: '',
-            ideaNumber: '',
-          }}
-          validationSchema={validateSchema}
-          onSubmit={handleSubmit}
-        >
-          <View
-            style={{
-              marginVertical: 15,
+              <Text
+                style={{
+                  textAlign: 'center',
+                  fontSize: 18,
+                  fontWeight: '700',
+                  textTransform: 'capitalize',
+                }}
+              >
+                edit account
+              </Text>
+            </View>
+            <ScrollView>
+              <FormField
+                name='barcode'
+                names='branchCode'
+                placeholder='Branch code'
+                keyBoardType='numeric'
+              />
+              <FormSelector
+                name='accountType'
+                items={items}
+                placeholder='Account type'
+              />
+              <FormField
+                name='format-list-numbered'
+                names='accountNumber'
+                placeholder='Account number'
+                keyBoardType='numeric'
+              />
+              <SubmitButton title='submit' />
+            </ScrollView>
+          </Form>
+        ) : (
+          <Form
+            initialValues={{
+              BankName: 'Sky Bank',
+              branchCode: 0,
+              accountNumber: 0,
+              accountType: '',
+              ideaNumber: '',
             }}
+            validationSchema={validateSchema}
+            onSubmit={handleSubmit}
           >
-            <Text
+            <View
               style={{
-                textAlign: 'center',
-                fontSize: 18,
-                fontWeight: '700',
-                textTransform: 'capitalize',
+                marginVertical: 15,
               }}
             >
-              create account
-            </Text>
-          </View>
-          <ScrollView>
-            <FormField name='bank' names='bankName' placeholder='Bank Name' />
-            <FormField
-              name='barcode'
-              names='branchCode'
-              placeholder='Branch code'
-              keyBoardType='numeric'
-            />
-            <FormField
-              name='format-list-numbered-rtl'
-              names='ideaNumber'
-              placeholder='ID Number'
-            />
-            <FormSelector
-              name='accountType'
-              items={items}
-              placeholder='Account type'
-            />
-            <FormField
-              name='format-list-numbered'
-              names='accountNumber'
-              placeholder='Account number'
-              keyBoardType='numeric'
-            />
-            <SubmitButton title='create account' />
-          </ScrollView>
-        </Form>
-      )}
-    </View>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  fontSize: 18,
+                  fontWeight: '700',
+                  textTransform: 'capitalize',
+                }}
+              >
+                create account
+              </Text>
+            </View>
+            <ScrollView>
+              <FormField name='bank' names='bankName' placeholder='Bank Name' />
+              <FormField
+                name='barcode'
+                names='branchCode'
+                placeholder='Branch code'
+                keyBoardType='numeric'
+              />
+              <FormField
+                name='format-list-numbered-rtl'
+                names='ideaNumber'
+                placeholder='ID Number'
+              />
+              <FormSelector
+                name='accountType'
+                items={items}
+                placeholder='Account type'
+              />
+              <FormField
+                name='format-list-numbered'
+                names='accountNumber'
+                placeholder='Account number'
+                keyBoardType='numeric'
+              />
+              <SubmitButton title='create account' />
+            </ScrollView>
+          </Form>
+        )}
+      </View>
+    </ProtectedScreen>
   );
 };
 

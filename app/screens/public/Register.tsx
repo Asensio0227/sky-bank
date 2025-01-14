@@ -3,7 +3,7 @@ import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import Loading from '../../components/custom/Loading';
+import SkeletonContainer from '../../components/custom/Skeleton';
 import DatePicker from '../../components/form/DatePicker';
 import Form, { userType } from '../../components/form/Form';
 import FormField from '../../components/form/FormField';
@@ -42,7 +42,7 @@ const Register = () => {
   };
 
   if (isLoading) {
-    return <Loading />;
+    return <SkeletonContainer />;
   }
 
   return (

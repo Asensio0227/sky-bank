@@ -33,6 +33,7 @@ const initialState: transactionState = {
   userTransactionsTotal: 0,
   transactions: [],
   userTransactions: [],
+  refunds: [],
   totalTransactions: 0,
   numbOfPages: 1,
   page: 1,
@@ -106,6 +107,34 @@ export const retrieveTransactions = createAsyncThunk(
       const response = await customFetch.get(
         `transaction/admin?${params.toString()}`
       );
+      return response.data;
+    } catch (error: any) {
+      return thunkApi.rejectWithValue(
+        error.response.data || 'Error occurred thunk'
+      );
+    }
+  }
+);
+// retrieve refundable
+export const refundable = createAsyncThunk(
+  'refundable',
+  async (_, thunkApi: ThunkApi) => {
+    try {
+      const response = await customFetch.get('transaction/reversal');
+      return response.data;
+    } catch (error: any) {
+      return thunkApi.rejectWithValue(
+        error.response.data || 'Error occurred thunk'
+      );
+    }
+  }
+);
+// create refunds
+export const requestRefunds = createAsyncThunk(
+  'create/refunds',
+  async (id: string, thunkApi: ThunkAPI) => {
+    try {
+      const response = await customFetch.post(`transaction/reversal/${id}`);
       return response.data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(
@@ -192,6 +221,44 @@ const transactionSlice = createSlice({
         state.isLoading = false;
         ToastAndroid.showWithGravity(
           action.error.message || 'An error occurred',
+          15000,
+          0
+        );
+      });
+    // retrieve refunds
+    builder
+      .addCase(refundable.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(refundable.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.refunds = action.payload.transactions;
+      })
+      .addCase(refundable.rejected, (state, action) => {
+        state.isLoading = false;
+        ToastAndroid.showWithGravity(
+          action.error.message || 'An error occurred',
+          15000,
+          0
+        );
+      });
+    // request refunds
+    builder
+      .addCase(requestRefunds.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(requestRefunds.fulfilled, (state, action) => {
+        state.isLoading = false;
+        ToastAndroid.showWithGravity(
+          action.payload.msg || 'Refund requested successfully',
+          15000,
+          0
+        );
+      })
+      .addCase(requestRefunds.rejected, (state, action: any) => {
+        state.isLoading = false;
+        ToastAndroid.showWithGravity(
+          action.payload.msg || 'An error occurred',
           15000,
           0
         );

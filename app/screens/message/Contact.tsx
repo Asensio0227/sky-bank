@@ -3,7 +3,7 @@ import React, { useCallback } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import ContactPreview from '../../components/chat/ContactPreview';
-import Loading from '../../components/custom/Loading';
+import SkeletonContainer from '../../components/custom/Skeleton';
 import PageBtnContainer from '../../components/PageBtnContainer';
 import {
   retrieveAllAssistant,
@@ -25,7 +25,7 @@ const Contact = () => {
     }, [])
   );
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <SkeletonContainer />;
 
   if (contact.length < 0) {
     return (
@@ -41,7 +41,7 @@ const Contact = () => {
     <>
       <FlatList
         data={contact}
-        keyExtractor={(item) => item && item._id.toString()}
+        keyExtractor={(item) => item && item._id}
         renderItem={({ item }) => (
           <ContactPreview data={item} image={item.avatar} />
         )}

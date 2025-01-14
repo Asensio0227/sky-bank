@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import Loading from '../../components/custom/Loading';
+import SkeletonContainer from '../../components/custom/Skeleton';
 import DatePicker from '../../components/form/DatePicker';
 import Form from '../../components/form/Form';
 import FormField from '../../components/form/FormField';
@@ -11,6 +11,7 @@ import SubmitButton from '../../components/form/SubmitButton';
 import { approveLoanApplication } from '../../features/loans/loanSlice';
 import { RootLoansState } from '../../features/loans/types';
 import { formatDate } from '../../utils/format';
+import ProtectedScreen from '../ProtectedScreen';
 
 const Approve = () => {
   const { monthlyPayment, isLoading } = useSelector(
@@ -32,34 +33,38 @@ const Approve = () => {
     }
   };
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <SkeletonContainer />;
 
   return (
-    <View style={styles.container}>
-      <Form
-        initialValues={{
-          monthlyPayment: monthlyPayment.toString() || '',
-          startDate: formatDate(new Date()) || '',
-          endDate: '',
-        }}
-        validationSchema={Yup.object().shape({
-          monthlyPayment: Yup.string().required('Monthly payment is required'),
-          startDate: Yup.string().required('Start date is required'),
-          endDate: Yup.string().required('End date is required'),
-        })}
-        onSubmit={handleSubmit}
-      >
-        <FormField
-          name='format-list-numbered'
-          names='monthlyPayment'
-          placeholder='Monthly payment'
-          keyBoardType='numeric'
-        />
-        <DatePicker name='startDate' placeholder='Start of loan payment' />
-        <DatePicker name='endDate' placeholder='end of loan payment' />
-        <SubmitButton title='submit' />
-      </Form>
-    </View>
+    <ProtectedScreen>
+      <View style={styles.container}>
+        <Form
+          initialValues={{
+            monthlyPayment: monthlyPayment.toString() || '',
+            startDate: formatDate(new Date()) || '',
+            endDate: '',
+          }}
+          validationSchema={Yup.object().shape({
+            monthlyPayment: Yup.string().required(
+              'Monthly payment is required'
+            ),
+            startDate: Yup.string().required('Start date is required'),
+            endDate: Yup.string().required('End date is required'),
+          })}
+          onSubmit={handleSubmit}
+        >
+          <FormField
+            name='format-list-numbered'
+            names='monthlyPayment'
+            placeholder='Monthly payment'
+            keyBoardType='numeric'
+          />
+          <DatePicker name='startDate' placeholder='Start of loan payment' />
+          <DatePicker name='endDate' placeholder='end of loan payment' />
+          <SubmitButton title='submit' />
+        </Form>
+      </View>
+    </ProtectedScreen>
   );
 };
 

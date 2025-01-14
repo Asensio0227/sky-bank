@@ -89,7 +89,7 @@ export default function HomeScreen() {
       </View>
       <FlatList
         data={userAccounts}
-        keyExtractor={(item) => item && item._id.toString()}
+        keyExtractor={(item) => item && item._id}
         renderItem={({ item }) => (
           <TouchableOpacity
             onPress={() => {

@@ -9,7 +9,7 @@ import {
   setReportPage,
 } from '../../features/reports/reportSlice';
 import { RootReportState } from '../../features/reports/types';
-import Loading from '../custom/Loading';
+import SkeletonContainer from '../custom/Skeleton';
 import ListItems from '../list/ListItems';
 import ListSeparator from '../list/ListSeparator';
 import PageBtnContainer from '../PageBtnContainer';
@@ -38,7 +38,7 @@ const ReportContainer = () => {
     dispatch(hideLoading());
   }, []);
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <SkeletonContainer />;
 
   if (reports.length === 0) {
     return (
@@ -80,7 +80,7 @@ const ReportContainer = () => {
         >
           <FlatList
             data={reports}
-            keyExtractor={(item) => item && item._id.toString()}
+            keyExtractor={(item) => item && item._id}
             renderItem={({ item }) => (
               <View
                 style={{

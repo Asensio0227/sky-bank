@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import Loading from '../../../components/custom/Loading';
+import SkeletonContainer from '../../../components/custom/Skeleton';
 import DatePicker from '../../../components/form/DatePicker';
 import Form from '../../../components/form/Form';
 import FormField from '../../../components/form/FormField';
@@ -14,6 +14,7 @@ import {
   hideLoading,
 } from '../../../features/reports/reportSlice';
 import { RootReportState } from '../../../features/reports/types';
+import ProtectedScreen from '../../ProtectedScreen';
 
 const CreateReport = () => {
   const route = useRoute();
@@ -39,45 +40,47 @@ const CreateReport = () => {
   }, []);
 
   if (isLoading) {
-    return <Loading />;
+    return <SkeletonContainer />;
   }
 
   return (
-    <View style={styles.container}>
-      <Form
-        initialValues={{
-          startDate: '',
-          endDate: '',
-          desc: '',
-        }}
-        validationSchema={Yup.object().shape({
-          startDate: Yup.string().required('Start date is required'),
-          endDate: Yup.string().required('End date is required'),
-          desc: Yup.string().required('Description is required'),
-        })}
-        onSubmit={handleSubmit}
-      >
-        <View style={styles.form}>
-          <Text style={styles.title}>Create Report</Text>
-          <FormField
-            name='card-text'
-            names='desc'
-            placeholder='Reason for audit'
-          />
-          <DatePicker
-            style={styles.input}
-            name='startDate'
-            placeholder='Start of account audit'
-          />
-          <DatePicker
-            style={styles.input}
-            name='endDate'
-            placeholder='end of account audit'
-          />
-          <SubmitButton title='submit' />
-        </View>
-      </Form>
-    </View>
+    <ProtectedScreen>
+      <View style={styles.container}>
+        <Form
+          initialValues={{
+            startDate: '',
+            endDate: '',
+            desc: '',
+          }}
+          validationSchema={Yup.object().shape({
+            startDate: Yup.string().required('Start date is required'),
+            endDate: Yup.string().required('End date is required'),
+            desc: Yup.string().required('Description is required'),
+          })}
+          onSubmit={handleSubmit}
+        >
+          <View style={styles.form}>
+            <Text style={styles.title}>Create Report</Text>
+            <FormField
+              name='card-text'
+              names='desc'
+              placeholder='Reason for audit'
+            />
+            <DatePicker
+              style={styles.input}
+              name='startDate'
+              placeholder='Start of account audit'
+            />
+            <DatePicker
+              style={styles.input}
+              name='endDate'
+              placeholder='end of account audit'
+            />
+            <SubmitButton title='submit' />
+          </View>
+        </Form>
+      </View>
+    </ProtectedScreen>
   );
 };
 

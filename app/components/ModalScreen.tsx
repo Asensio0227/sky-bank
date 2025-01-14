@@ -12,7 +12,7 @@ import {
   updateUser,
 } from '../features/auth/authSlice';
 import { RootState } from '../features/auth/types';
-import Loading from './custom/Loading';
+import SkeletonContainer from './custom/Skeleton';
 import DatePicker from './form/DatePicker';
 import Form, { userType } from './form/Form';
 import FormField from './form/FormField';
@@ -46,6 +46,7 @@ const ModalScreen = () => {
   if (!modalVisible) return;
 
   const handleSubmit = async (user: userType) => {
+    console.log(user);
     await dispatch(updateUser(user) as any);
   };
 
@@ -66,7 +67,7 @@ const ModalScreen = () => {
     }
   };
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <SkeletonContainer />;
 
   return (
     <View style={styles.centerView}>

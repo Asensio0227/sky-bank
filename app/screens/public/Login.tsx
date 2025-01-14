@@ -2,31 +2,43 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import Loading from '../../components/custom/Loading';
+import SkeletonContainer from '../../components/custom/Skeleton';
 import TextLink from '../../components/custom/TextLink';
 import Form, { userType } from '../../components/form/Form';
 import FormField from '../../components/form/FormField';
 import SubmitButton from '../../components/form/SubmitButton';
 import { loginUser } from '../../features/auth/authSlice';
 import { RootState } from '../../features/auth/types';
+import { expoPushNotification } from '../../features/user/userSlice';
 import useLocation from '../../hooks/useLocation';
+import { usePushNotifications } from '../../hooks/useNotifications';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email().required('Please enter a valid email!'),
   password: Yup.string().required('Please enter a password!'),
-  location: Yup.string(),
 });
 
 const Login = () => {
   const { isLoading } = useSelector((store: RootState) => store.auth);
   const dispatch = useDispatch();
   const { location } = useLocation();
+  const { expoPushToken } = usePushNotifications();
+  console.log(`===expoPushToken====`);
+  console.log(expoPushToken);
+  console.log(`===expoPushToken====`);
+
+  if (expoPushToken === undefined && location === undefined) {
+    alert('Please await few minutes, network is slow');
+    return;
+  }
 
   const onSignInPress = async (data: userType | any) => {
-    await dispatch(loginUser(data) as any);
+    const info = { location, ...data };
+    await dispatch(loginUser(info) as any);
+    expoPushToken && (await dispatch(expoPushNotification(expoPushToken)));
   };
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <SkeletonContainer />;
 
   return (
     <View style={styles.container}>
@@ -34,7 +46,6 @@ const Login = () => {
         initialValues={{
           email: '',
           password: '',
-          location: location || '',
         }}
         validationSchema={validationSchema}
         onSubmit={onSignInPress}

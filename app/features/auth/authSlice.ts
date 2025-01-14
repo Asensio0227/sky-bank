@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice, ThunkAPI } from '@reduxjs/toolkit';
 import { ToastAndroid } from 'react-native';
 import { userType } from '../../components/form/Form';
 import customFetch from '../../utils/axios';
-import { removeToken, storeToken } from '../../utils/storage';
 import { payloadAction, UserState } from './types';
 
 const initialState = {
@@ -84,7 +83,7 @@ export const resetPassword = createAsyncThunk<ApiResponse, userType>(
 
 export const loginUser = createAsyncThunk<ApiResponse, userType>(
   'users/login',
-  async (userData: userType, thunkAPI: ThunkAPI) => {
+  async (userData: userType | any, thunkAPI: ThunkAPI) => {
     try {
       const { email, password, location } = userData;
       const response = await customFetch.post('auth/login', {
@@ -104,7 +103,7 @@ export const loginUser = createAsyncThunk<ApiResponse, userType>(
 
 export const loadUser = createAsyncThunk<ApiResponse, userType>(
   'users/loadUser',
-  async (thunkAPI: ThunkAPI) => {
+  async (_, thunkAPI: ThunkAPI) => {
     try {
       const response = await customFetch.get('user/showMe');
       return response.data;
@@ -131,7 +130,11 @@ export const updateUser = createAsyncThunk<ApiResponse, userType>(
   async (userData: any, thunkAPI: ThunkAPI) => {
     try {
       const formData = new FormData();
-      formData.append('avatar', userData.avatar);
+      formData.append('avatar', {
+        uri: userData.avatar,
+        type: 'image/jpeg', // or 'image/png' depending on your image type
+        name: 'avatar.jpg', // or whatever name you want to give it
+      });
       formData.append('firstName', userData.firstName);
       formData.append('lastName', userData.lastName);
       formData.append('gender', userData.gender);
@@ -140,9 +143,16 @@ export const updateUser = createAsyncThunk<ApiResponse, userType>(
       formData.append('phoneNumber', userData.phoneNumber);
       formData.append('ideaNumber', userData.ideaNumber);
       formData.append('physicalAddress', userData.physicalAddress);
+      console.log(`===formData===`);
+      console.log(formData);
+      console.log(userData.avatar);
+      console.log(`===formData===`);
       const response = await customFetch.patch(`user/updateUser`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
+      if (!response) {
+        console.error('Upload failed:', response);
+      }
       return response.data;
     } catch (error: any) {
       const errorMessage = error.response
@@ -342,7 +352,6 @@ export const authSlice = createSlice({
           const { userWithoutPassword } = action.payload;
           state.isLoading = false;
           state.user = userWithoutPassword;
-          storeToken(userWithoutPassword);
         }
       )
       .addCase(loadUser.rejected, (state: UserState, action: payloadAction) => {
@@ -363,7 +372,6 @@ export const authSlice = createSlice({
       .addCase(logout.fulfilled, (state: UserState, action: payloadAction) => {
         state.isLoading = false;
         state.user = null;
-        removeToken();
         ToastAndroid.showWithGravity(action.payload.msg, 15000, 0);
       })
       .addCase(logout.rejected, (state: UserState, action: payloadAction) => {
@@ -388,7 +396,6 @@ export const authSlice = createSlice({
           state.isLoading = false;
           state.modalVisible = false;
           state.user = user;
-          storeToken(user);
           ToastAndroid.showWithGravity('User updated!', 15000, 0);
         }
       )

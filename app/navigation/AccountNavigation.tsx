@@ -6,12 +6,14 @@ import React from 'react';
 import ModalScreen from '../components/ModalScreen';
 import Add from '../screens/account/Add';
 import ApplyForLoan from '../screens/account/ApplyForLoan';
+import CreateStatement from '../screens/account/CreateStatement';
 import Details from '../screens/account/Details';
 import Information from '../screens/account/Information';
 import Loan from '../screens/account/Loan';
 import Management from '../screens/account/Management';
 import Refund from '../screens/account/Refund';
 import Statement from '../screens/account/Statement';
+import StatementPdf from '../screens/account/StatementPdf';
 import Transaction from '../screens/account/Transaction';
 import Transfer from '../screens/account/Transfer';
 import Home from '../screens/auth/Home';
@@ -26,6 +28,8 @@ const AccountNavigation = () => {
       <Stack.Screen name='add' component={Add} />
       <Stack.Screen name='management' component={Management} />
       <Stack.Screen name='statement' component={Statement} />
+      <Stack.Screen name='pdf' component={StatementPdf} />
+      <Stack.Screen name='bank' component={CreateStatement} />
       <Stack.Screen name='transaction' component={Transaction} />
       <Stack.Screen name='transfer' component={Transfer} />
       <Stack.Screen name='refund' component={Refund} />

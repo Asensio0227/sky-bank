@@ -3,7 +3,7 @@ import React, { useCallback } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import Loading from '../../components/custom/Loading';
+import SkeletonContainer from '../../components/custom/Skeleton';
 import Form from '../../components/form/Form';
 import FormField from '../../components/form/FormField';
 import SubmitButton from '../../components/form/SubmitButton';
@@ -35,7 +35,7 @@ const Management = () => {
     }, [_id, dispatch])
   );
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <SkeletonContainer />;
 
   if (!singleAccount)
     return (

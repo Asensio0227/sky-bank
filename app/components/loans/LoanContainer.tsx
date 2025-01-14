@@ -13,7 +13,7 @@ import {
   showLoading,
 } from '../../features/loans/loanSlice';
 import { RootLoansState } from '../../features/loans/types';
-import Loading from '../custom/Loading';
+import SkeletonContainer from '../custom/Skeleton';
 import ListItems from '../list/ListItems';
 import ListSeparator from '../list/ListSeparator';
 import PageBtnContainer from '../PageBtnContainer';
@@ -39,7 +39,6 @@ const LoanContainer = () => {
     modalVisible,
   } = useSelector((store: RootLoansState) => store.Loans);
   const { user } = useSelector((store: RootState) => store.auth);
-  console.log(modalVisible);
 
   useFocusEffect(
     useCallback(() => {
@@ -71,7 +70,7 @@ const LoanContainer = () => {
     );
   }
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <SkeletonContainer />;
 
   return (
     <>
@@ -109,7 +108,7 @@ const LoanContainer = () => {
             {user.roles !== 'user' ? (
               <FlatList
                 data={loans}
-                keyExtractor={(item) => item && item._id.toString()}
+                keyExtractor={(item) => item && item._id}
                 renderItem={({ item }) => (
                   <View style={{ width: 1400 }}>
                     <ListItems
@@ -143,7 +142,7 @@ const LoanContainer = () => {
             ) : (
               <FlatList
                 data={userLoans}
-                keyExtractor={(item) => item && item._id.toString()}
+                keyExtractor={(item) => item && item._id}
                 renderItem={({ item }) => <LoanInfo item={item} />}
                 scrollEnabled
                 showsVerticalScrollIndicator={false}

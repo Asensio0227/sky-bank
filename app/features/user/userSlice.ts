@@ -98,6 +98,19 @@ export const deleteUser = createAsyncThunk(
     }
   }
 );
+export const expoPushNotification = createAsyncThunk(
+  'user/expoToken',
+  async (expoPushToken: any, thunkApi: ThunkAPI) => {
+    try {
+      const response = await customFetch.post('user/expo-token', {
+        expoToken: expoPushToken,
+      });
+      return response.data;
+    } catch (error: any) {
+      return checkForUnauthorizedResponse(error, thunkApi);
+    }
+  }
+);
 
 const userSlice = createSlice({
   name: 'allUser',
@@ -194,6 +207,21 @@ const userSlice = createSlice({
       })
       .addCase(deleteUser.rejected, (state, action: any) => {
         state.userLoading = false;
+        ToastAndroid.showWithGravity(
+          action.payload.msg || 'An error occurred',
+          15000,
+          0
+        );
+      });
+    builder
+      .addCase(expoPushNotification.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(expoPushNotification.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(expoPushNotification.rejected, (state, action: any) => {
+        state.isLoading = false;
         ToastAndroid.showWithGravity(
           action.payload.msg || 'An error occurred',
           15000,

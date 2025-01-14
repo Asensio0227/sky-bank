@@ -38,11 +38,11 @@ const SearchTransactionContainer = () => {
   const dispatch = useDispatch();
   const [input, setInput] = useState(search);
   const [searchTerm, setSearchTerm] = useState(status);
+  const [selected, setSelected] = useState(sort);
   const [selectedLanguage, setSelectedLanguage] = useState(accountType);
   const [transaction, setTransaction] = useState(transactionType);
   const [reverse, setReverse] = useState(reversal);
   const [types, setTypes] = useState(type);
-  const [selected, setSelected] = useState(sort);
   const list: Option[] = formatArray(accountTypeOptions);
   const sortOp: Option[] = formatArray(sortOptions);
   const transactionOp: Option[] = formatArray(transactionOption);

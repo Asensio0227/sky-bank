@@ -18,7 +18,7 @@ const DrawerNavigation = () => {
 
   useEffect(() => {
     if (user?.roles === 'user') {
-      navigation.navigate('home');
+      navigation.navigate('Home');
     } else {
       navigation.navigate('dashboard');
     }
@@ -41,11 +41,13 @@ const DrawerNavigation = () => {
         options={{ title: 'Notifications' }}
         component={Notifications}
       />
-      <Drawer.Screen
-        name='dashboard'
-        options={{ title: 'dashboard' }}
-        component={AdminNavigation}
-      />
+      {user.roles !== 'user' && (
+        <Drawer.Screen
+          name='dashboard'
+          options={{ title: 'dashboard' }}
+          component={AdminNavigation}
+        />
+      )}
       <Drawer.Screen
         name='help'
         options={{ title: 'Help&Support' }}

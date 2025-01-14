@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#F5FCFF"
-      }
+      },
+      "package": "com.brendon99.skybank"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -30,6 +31,17 @@
       }
     },
     "owner": "brendon99",
-    "plugins": ["expo-router"]
+    "plugins": [
+      "expo-router",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "node_modules/@expo-google-fonts/inter/Inter_900Black.ttf",
+            "node_modules/@expo-google-fonts/inter/Inter_400Regular.ttf"
+          ]
+        }
+      ]
+    ]
   }
 }

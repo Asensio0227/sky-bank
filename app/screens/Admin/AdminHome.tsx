@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import Icon from '../../components/Icon';
 import { palette } from '../../constants/Colors';
+import ProtectedScreen from '../ProtectedScreen';
 
 const adminServices = [
   { name: 'all users', icon: 'account', path: 'all' },
@@ -23,7 +24,12 @@ const adminServices = [
     path: 'create',
   },
   {
-    name: 'All account',
+    name: 'All Statements',
+    icon: 'text-box-outline',
+    path: 'sheet',
+  },
+  {
+    name: 'All accounts',
     icon: 'card-multiple-outline',
     path: 'allAccounts',
   },
@@ -33,7 +39,7 @@ const adminServices = [
     path: 'transactions',
   },
   {
-    name: 'Report',
+    name: 'Reports',
     icon: 'source-repository-multiple',
     path: 'reports',
   },
@@ -42,30 +48,32 @@ const adminServices = [
 const AdminHome = () => {
   const router: any = useNavigation();
   return (
-    <View style={styles.container}>
-      <View style={styles.section}>
-        <FlatList
-          data={adminServices}
-          keyExtractor={(item, index) => `${item.name}-${index}`}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => router.navigate(item.path)}>
-              <View style={styles.infoContainer}>
-                <Icon
-                  name={item.icon}
-                  backgroundColor={palette.primary}
-                  width='30%'
-                  size={60}
-                  style={styles.icon}
-                />
-                <Text>{item.name}</Text>
-              </View>
-            </TouchableOpacity>
-          )}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-        />
+    <ProtectedScreen>
+      <View style={styles.container}>
+        <View style={styles.section}>
+          <FlatList
+            data={adminServices}
+            keyExtractor={(item, index) => `${item.name}-${index}`}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => router.navigate(item.path)}>
+                <View style={styles.infoContainer}>
+                  <Icon
+                    name={item.icon}
+                    backgroundColor={palette.primary}
+                    width='30%'
+                    size={60}
+                    style={styles.icon}
+                  />
+                  <Text>{item.name}</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+          />
+        </View>
       </View>
-    </View>
+    </ProtectedScreen>
   );
 };
 

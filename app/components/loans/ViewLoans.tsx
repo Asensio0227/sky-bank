@@ -16,7 +16,7 @@ import { styles, wrapper } from '../../constants/styles';
 import { handleModal } from '../../features/loans/loanSlice';
 import { RootLoansState } from '../../features/loans/types';
 import { formatValue } from '../../utils/format';
-import Loading from '../custom/Loading';
+import SkeletonContainer from '../custom/Skeleton';
 import ListItems from '../list/ListItems';
 import LoanBtn from './LoanBtn';
 
@@ -26,7 +26,7 @@ const ViewLoans: React.FC = () => {
   );
   const dispatch = useDispatch();
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <SkeletonContainer />;
 
   return (
     <View style={[styles.centerView, { overflow: 'hidden' }]}>
@@ -61,7 +61,7 @@ const ViewLoans: React.FC = () => {
             </View>
             <FlatList
               data={singleLoan?.loans}
-              keyExtractor={(item) => item && item._id.toString()}
+              keyExtractor={(item) => item && item._id}
               renderItem={({ item }) => (
                 <View style={wrappers.container}>
                   <LoanBtn item={item} />

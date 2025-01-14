@@ -9,7 +9,7 @@ import {
   openModal,
 } from '../../features/accounts/accountsSlice';
 import { RootAccountState } from '../../features/accounts/types';
-import Loading from '../custom/Loading';
+import SkeletonContainer from '../custom/Skeleton';
 import ListItems from '../list/ListItems';
 import ListSeparator from '../list/ListSeparator';
 import PageBtnContainer from '../PageBtnContainer';
@@ -42,7 +42,7 @@ const Account = () => {
     }, [page, sort, accountType, search, Loader])
   );
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <SkeletonContainer />;
 
   if (accounts.length === 0) {
     return (
@@ -78,7 +78,7 @@ const Account = () => {
           >
             <FlatList
               data={accounts}
-              keyExtractor={(item) => item._id.toString()}
+              keyExtractor={(item) => item._id}
               renderItem={({ item }) => (
                 <View
                   style={{

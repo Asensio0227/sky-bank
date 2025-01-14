@@ -11,7 +11,7 @@ import {
   retrieveTransactions,
 } from '../../features/transaction/transactionSlice';
 import { RootTransactionState } from '../../features/transaction/types';
-import Loading from '../custom/Loading';
+import SkeletonContainer from '../custom/Skeleton';
 import ListSeparator from '../list/ListSeparator';
 import PageBtnContainer from '../PageBtnContainer';
 import ViewTransaction from './ViewTransaction';
@@ -77,7 +77,7 @@ const TransactionsContainer: React.FC<{ params: accType }> = ({ params }) => {
     );
   }
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <SkeletonContainer />;
 
   return (
     <>
@@ -104,8 +104,7 @@ const TransactionsContainer: React.FC<{ params: accType }> = ({ params }) => {
           <View
             style={{
               flex: 1,
-              width: '90%',
-              flexWrap: 'nowrap',
+              flexWrap: 'wrap',
               justifyContent: 'center',
               marginVertical: 20,
               padding: 15,
@@ -113,9 +112,9 @@ const TransactionsContainer: React.FC<{ params: accType }> = ({ params }) => {
           >
             <FlatList
               data={user.roles === 'user' ? transaction : allTransaction}
-              keyExtractor={(item) => item && item._id.toString()}
+              keyExtractor={(item) => item && item._id}
               renderItem={({ item }) => (
-                <View style={{ width: 1400 }}>
+                <View style={{ width: 300 }}>
                   <ViewTransaction
                     title={item?.description}
                     subTitle={`$${item?.amount / 100}`}

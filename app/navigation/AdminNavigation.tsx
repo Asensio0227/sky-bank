@@ -7,6 +7,7 @@ import AdminHome from '../screens/Admin/AdminHome';
 import AllAccounts from '../screens/Admin/AllAccounts';
 import AllUsers from '../screens/Admin/AllUsers';
 import Approve from '../screens/Admin/Approve';
+import BalanceSheet from '../screens/Admin/BalanceSheet';
 import CalculatePayments from '../screens/Admin/CalculatePayments';
 import CreateAccount from '../screens/Admin/CreateAccount';
 import Loans from '../screens/Admin/Loans';
@@ -31,6 +32,11 @@ const AdminNavigation = () => {
         name='all'
         options={{ title: 'All users' }}
         component={AllUsers}
+      />
+      <Stack.Screen
+        name='sheet'
+        options={{ title: 'all Statements' }}
+        component={BalanceSheet}
       />
       <Stack.Screen
         name='allAccounts'
@@ -62,6 +68,7 @@ const AdminNavigation = () => {
         options={{ title: 'Person Info' }}
         component={SingleUser}
       />
+
       <Stack.Screen
         name='reports'
         options={{ title: 'Audit Account' }}

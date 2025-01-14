@@ -7,7 +7,7 @@ import { palette } from '../../constants/Colors';
 import { styles } from '../../constants/styles';
 import { RootUserState } from '../../features/user/types';
 import { getAllUsers, handlePage } from '../../features/user/userSlice';
-import Loading from '../custom/Loading';
+import SkeletonContainer from '../custom/Skeleton';
 import PageBtnContainer from '../PageBtnContainer';
 import User from './User';
 
@@ -33,7 +33,7 @@ const UserList = () => {
     }, [page, search, sort, roles, banned])
   );
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <SkeletonContainer />;
 
   if (users.length === 0) {
     return (
@@ -69,7 +69,7 @@ const UserList = () => {
           >
             <FlatList
               data={users}
-              keyExtractor={(item) => item && item._id.toString()}
+              keyExtractor={(item) => item && item._id}
               renderItem={({ item }) => (
                 <View
                   style={{
